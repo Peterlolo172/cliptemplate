@@ -6,83 +6,54 @@
 <title>ClipTemplate</title>
 <style>
 *{box-sizing:border-box}
-body{
-margin:0;background:#080910;color:#fff;
-font-family:Arial,sans-serif;
-}
-header{
-padding:22px;display:flex;justify-content:space-between;
-align-items:center;border-bottom:1px solid #222;
-}
-.logo{font-size:25px;font-weight:bold}
-.logo span{color:#9b65ff}
-main{max-width:750px;margin:auto;padding:25px 18px}
-.hero{text-align:center;padding:50px 5px}
-.hero h1{font-size:42px;line-height:1.2}
-.hero h1 span{color:#9b65ff}
-.hero p{color:#aaa;font-size:18px;line-height:1.7}
-.card{
-background:#121522;padding:25px;border-radius:25px;
-border:1px solid #292d40;margin-top:25px;
-}
-input[type=file]{width:100%;padding:20px;background:#080910;
-color:white;border-radius:15px}
-button{
-width:100%;border:none;padding:18px;
-background:#8955f6;color:white;font-size:18px;
-font-weight:bold;border-radius:15px;margin-top:20px;
-}
-button:disabled{opacity:.6}
-#results{display:none;margin-top:30px}
-.frame{
-background:#080910;border:1px solid #282c3b;
-padding:15px;border-radius:15px;margin-bottom:15px;
-}
-.frame img{width:100%;border-radius:10px}
-.frame h3{margin-bottom:5px}
-.frame p{color:#aaa;line-height:1.6}
-.badge{
-display:inline-block;background:#24203b;color:#c4a5ff;
-padding:7px 12px;border-radius:30px;margin:5px 3px;
-font-size:13px
-}
-#loading{display:none;text-align:center;padding:20px;color:#b99aff}
-footer{text-align:center;padding:30px;color:#777}
+body{margin:0;background:#0c0b16;color:#fff;font-family:Arial,sans-serif;padding:20px}
+.container{max-width:850px;margin:auto}
+header{text-align:center;padding:25px 0}
+h1{font-size:32px;color:#a78bfa;margin:0}
+header p{color:#aaa}
+.card{background:#171525;border:1px solid #30294a;border-radius:18px;padding:20px;margin-bottom:18px}
+input,button{width:100%;padding:14px;border-radius:10px;margin-top:12px}
+input{background:#252139;color:white;border:1px solid #453b65}
+button{background:#8b5cf6;color:white;font-weight:bold;border:none;cursor:pointer}
+button:disabled{opacity:.5}
+video{width:100%;margin-top:15px;border-radius:12px;background:#000}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.stat{background:#221d35;padding:15px;border-radius:12px}
+.stat small{color:#aaa;display:block;margin-bottom:6px}
+.stat strong{font-size:20px}
+.frame{background:#221d35;border-radius:12px;padding:10px;margin-bottom:10px}
+.frame img{width:100%;border-radius:8px}
+.frame p{font-size:13px;color:#ccc}
+h2{font-size:19px}
+.result{color:#ddd;line-height:1.7}
+#status{color:#c4b5fd;text-align:center;margin-top:15px}
+footer{text-align:center;color:#777;font-size:12px;margin:30px 0}
 </style>
 </head>
 <body>
-
+<div class="container">
 <header>
-<div class="logo">Clip<span>Template</span></div>
-<div style="color:#b99aff">VIDEO EDIT AI</div>
+<h1>ClipTemplate ✂️</h1>
+<p>Understand how your video was edited.</p>
 </header>
 
-<main>
-
-<section class="hero">
-<h1>Discover the edit<br>behind <span>the video.</span></h1>
-<p>Analyse videos, discover editing patterns
-and learn how to recreate them.</p>
-</section>
-
-<section class="card">
-<h2>🎬 Video Analyzer</h2>
-<p style="color:#aaa">Upload a video to reveal its editing structure.</p>
-
-<input type="file" id="videoInput" accept="video/*">
-
-<button onclick="analyseVideo()">Analyse My Video</button>
-
-<div id="loading">
-⏳ Analysing video and extracting scenes...
-</div>
-</section>
-
-<section id="results">
-
 <div class="card">
-<h2>📊 Video Overview</h2>
-<div id="overview"></div>
+<h2>Upload your video</h2>
+<input type="file" id="file" accept="video/*">
+<video id="video" controls style="display:none"></video>
+<button id="analyse" disabled>Analyse My Video</button>
+<div id="status"></div>
+</div>
+
+<div id="results" style="display:none">
+<div class="card">
+<h2>Video Overview</h2>
+<div class="grid">
+<div class="stat"><small>Duration</small><strong id="duration">--</strong></div>
+<div class="stat"><small>Resolution</small><strong id="resolution">--</strong></div>
+<div class="stat"><small>Orientation</small><strong id="orientation">--</strong></div>
+<div class="stat"><small>Scene changes</small><strong id="cuts">--</strong></div>
+</div>
 </div>
 
 <div class="card">
@@ -91,132 +62,178 @@ and learn how to recreate them.</p>
 </div>
 
 <div class="card">
-<h2>🧠 Editing Observations</h2>
-<div id="observations"></div>
+<h2>📝 On-screen Text</h2>
+<div id="ocr" class="result">Waiting for analysis...</div>
 </div>
 
 <div class="card">
-<h2>✂️ How to Recreate It</h2>
-<div id="instructions"></div>
+<h2>🔍 Editing Observations</h2>
+<div id="observations" class="result"></div>
 </div>
 
-</section>
+<div class="card">
+<h2>🛠️ How to recreate it</h2>
+<div id="instructions" class="result"></div>
+</div>
+</div>
 
-</main>
+<footer>ClipTemplate • Video processing happens in your browser</footer>
+</div>
 
-<footer>
-ClipTemplate © 2026 — Discover the edit.
-</footer>
-
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <script>
-async function analyseVideo(){
+const file=document.getElementById('file');
+const video=document.getElementById('video');
+const analyse=document.getElementById('analyse');
+const status=document.getElementById('status');
+let videoURL=null;
 
-const file=document.getElementById("videoInput").files[0];
+file.addEventListener('change',()=>{
+if(!file.files[0])return;
+if(videoURL)URL.revokeObjectURL(videoURL);
+videoURL=URL.createObjectURL(file.files[0]);
+video.src=videoURL;
+video.style.display='block';
+analyse.disabled=false;
+document.getElementById('results').style.display='none';
+status.textContent='Video ready!';
+});
 
-if(!file){
-alert("Please select a video first.");
-return;
+function seekTo(v,t){
+return new Promise(resolve=>{
+const handler=()=>{
+v.removeEventListener('seeked',handler);
+resolve();
+};
+v.addEventListener('seeked',handler);
+v.currentTime=t;
+});
 }
 
-document.getElementById("loading").style.display="block";
-document.getElementById("results").style.display="none";
+function getFrame(v){
+const c=document.createElement('canvas');
+c.width=160;
+c.height=90;
+c.getContext('2d').drawImage(v,0,0,160,90);
+return c;
+}
 
-const video=document.createElement("video");
-video.src=URL.createObjectURL(file);
-video.muted=true;
-video.playsInline=true;
+function difference(a,b){
+const A=a.getContext('2d').getImageData(0,0,160,90).data;
+const B=b.getContext('2d').getImageData(0,0,160,90).data;
+let diff=0;
+for(let i=0;i<A.length;i+=16){
+diff+=Math.abs(A[i]-B[i])+Math.abs(A[i+1]-B[i+1])+Math.abs(A[i+2]-B[i+2]);
+}
+return diff/(A.length/16);
+}
 
-video.onloadedmetadata=async()=>{
+analyse.onclick=async()=>{
+if(!video.duration||!isFinite(video.duration))return;
+
+analyse.disabled=true;
+status.textContent='Sampling video frames...';
+document.getElementById('results').style.display='block';
 
 const duration=video.duration;
-const width=video.videoWidth;
-const height=video.videoHeight;
-
-const canvas=document.createElement("canvas");
-const ctx=canvas.getContext("2d");
-
-canvas.width=320;
-canvas.height=320*(height/width);
-
-const count=Math.min(8,Math.max(2,Math.ceil(duration/5)));
-let scenes=[];
+const count=Math.min(12,Math.max(2,Math.ceil(duration/2)));
+const frames=[];
+const timestamps=[];
 
 for(let i=0;i<count;i++){
-
-const time=Math.min(duration-0.1,(duration/count)*i);
-
-await new Promise(resolve=>{
-video.currentTime=time;
-video.onseeked=resolve;
-});
-
-ctx.drawImage(video,0,0,canvas.width,canvas.height);
-
-scenes.push({
-time:time,
-image:canvas.toDataURL("image/jpeg",0.7)
-});
+let t=Math.min(duration-0.1,(duration*i)/count);
+await seekTo(video,t);
+frames.push(getFrame(video));
+timestamps.push(t);
 }
 
-document.getElementById("overview").innerHTML=`
-<p><span class="badge">Duration: ${duration.toFixed(1)} sec</span></p>
-<p><span class="badge">Resolution: ${width} × ${height}</span></p>
-<p><span class="badge">${scenes.length} sampled scenes</span></p>
-<p><span class="badge">${width>height?"Landscape":width<height?"Portrait":"Square"} video</span></p>
-`;
+document.getElementById('duration').textContent=Math.round(duration)+' sec';
+document.getElementById('resolution').textContent=video.videoWidth+' × '+video.videoHeight;
+document.getElementById('orientation').textContent=video.videoWidth>video.videoHeight?'Landscape':'Portrait';
 
-let timeline="";
+status.textContent='Comparing scenes...';
 
-scenes.forEach((scene,index)=>{
+let changes=0;
+const scores=[];
 
-timeline+=`
-<div class="frame">
-<h3>Scene ${index+1} · ${scene.time.toFixed(1)} seconds</h3>
-<img src="${scene.image}">
-<p>Sampled frame at ${scene.time.toFixed(1)}s</p>
-</div>
-`;
-
-});
-
-document.getElementById("timeline").innerHTML=timeline;
-
-document.getElementById("observations").innerHTML=`
-<p>The video is ${duration.toFixed(1)} seconds long.</p>
-<p>We sampled ${scenes.length} frames across the video to examine its visual structure.</p>
-<p>Video format: ${width<height?"Vertical":width>height?"Horizontal":"Square"}.</p>
-<p>These frames provide a starting point for detecting transitions,
-visual effects, text overlays and editing patterns.</p>
-<p style="color:#b99aff">Note: These are sampled frames, not confirmed scene cuts.</p>
-`;
-
-document.getElementById("instructions").innerHTML=`
-<ol>
-<li>Open CapCut and create a new project.</li>
-<li>Import your own video clips.</li>
-<li>Arrange your clips to follow the sequence of the sampled frames.</li>
-<li>Adjust the duration of each clip to match the pacing.</li>
-<li>Explore transitions between clips.</li>
-<li>Try zoom effects, filters, text animations and overlays.</li>
-<li>Add music and synchronise cuts with the beat.</li>
-</ol>
-<p style="color:#b99aff">
-This is a general recreation guide. Specific effects have not yet been detected.
-</p>
-`;
-
-document.getElementById("results").style.display="block";
-document.getElementById("loading").style.display="none";
-
-};
-
-video.onerror=()=>{
-alert("Could not load this video. Please try another one.");
-document.getElementById("loading").style.display="none";
-};
-
+for(let i=1;i<frames.length;i++){
+let score=difference(frames[i-1],frames[i]);
+scores.push(score);
+if(score>30)changes++;
 }
 
+document.getElementById('cuts').textContent=changes;
+
+const timeline=document.getElementById('timeline');
+timeline.innerHTML='';
+
+frames.forEach((f,i)=>{
+const div=document.createElement('div');
+div.className='frame';
+const img=document.createElement('img');
+img.src=f.toDataURL();
+const p=document.createElement('p');
+p.textContent='Sample '+(i+1)+' • '+timestamps[i].toFixed(1)+' seconds';
+div.appendChild(img);
+div.appendChild(p);
+timeline.appendChild(div);
+});
+
+status.textContent='Checking frames for on-screen text...';
+
+let textFound=[];
+let worker=null;
+
+try{
+if(typeof Tesseract!=='undefined'){
+worker=await Tesseract.createWorker('eng');
+for(let i=0;i<frames.length;i++){
+status.textContent='Reading text in frame '+(i+1)+'/'+frames.length;
+const res=await worker.recognize(frames[i]);
+const txt=res.data.text.trim();
+if(txt)textFound.push({time:timestamps[i],text:txt});
+}
+await worker.terminate();
+}
+}catch(e){
+if(worker)try{await worker.terminate()}catch(err){}
+textFound=[];
+}
+
+const ocr=document.getElementById('ocr');
+if(textFound.length){
+ocr.innerHTML=textFound.map(x=>
+'<p><strong>'+x.time.toFixed(1)+'s:</strong> '+escapeHTML(x.text)+'</p>'
+).join('');
+}else{
+ocr.textContent='No readable text detected in the sampled frames. Text detection may be limited by video quality.';
+}
+
+document.getElementById('observations').innerHTML=
+'• Video duration: '+duration.toFixed(1)+' seconds.<br>'+
+'• '+frames.length+' frames sampled.<br>'+
+'• Approximately '+changes+' noticeable visual changes detected between sampled frames.<br>'+
+'• '+textFound.length+' sampled frames contained readable text.<br>'+
+'• '+(video.videoWidth>video.videoHeight?'Landscape':'Portrait')+' format detected.<br>'+
+'• Scene change estimates are approximate; gradual effects may not be detected.';
+
+document.getElementById('instructions').innerHTML=
+'1. Open CapCut and import your video.<br>'+
+'2. Trim clips to match the timing you want.<br>'+
+'3. Add text using the text content detected above, where applicable.<br>'+
+'4. Explore transitions such as Flash, Blur or Camera Shake if your video style calls for them.<br>'+
+'5. Adjust speed, filters and music to match the original video.<br>'+
+'6. Export in the same orientation as your source video.';
+
+status.textContent='Analysis complete! 🔥';
+analyse.disabled=false;
+};
+
+function escapeHTML(str){
+return str.replace(/[&<>"']/g,m=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[m]));
+}
 </script>
 </body>
 </html>
