@@ -406,5 +406,92 @@ console.error(e);
 analyseBtn.disabled=false;
 };
 </script>
+  <style>
+.template-finder {
+  background: #17152b;
+  border: 1px solid #393354;
+  border-radius: 18px;
+  padding: 20px;
+  margin: 25px 0;
+  color: white;
+}
+.template-finder h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.template-finder p {
+  color: #aaa5bd;
+  font-size: 14px;
+}
+.template-finder input,
+.template-finder select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px;
+  margin: 9px 0;
+  border-radius: 10px;
+  border: 1px solid #494264;
+  background: #24213b;
+  color: white;
+  font-size: 15px;
+}
+.template-finder button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 10px;
+  background: linear-gradient(100deg,#8b5cf6,#d946ef);
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+}
+</style>
+
+  <section class="template-finder">
+  <h2>🔎 Find Similar Templates</h2>
+  <p>Describe your video and discover CapCut templates with a similar style.</p>
+
+  <input id="templateDescription"
+    placeholder="e.g. Football edit with slow motion and beat sync">
+
+  <select id="templateStyle">
+    <option value="">Choose editing style</option>
+    <option value="Velocity edit">Velocity</option>
+    <option value="Slow motion edit">Slow motion</option>
+    <option value="Beat sync edit">Beat sync</option>
+    <option value="Cinematic edit">Cinematic</option>
+    <option value="Football edit">Football</option>
+    <option value="Photo slideshow">Photo slideshow</option>
+    <option value="Transition edit">Transitions</option>
+    <option value="Lyrics edit">Lyrics</option>
+  </select>
+
+  <button onclick="findTemplates()">Find Templates →</button>
+</section>
+
+<script>
+function findTemplates() {
+  const description =
+    document.getElementById("templateDescription").value.trim();
+
+  const style =
+    document.getElementById("templateStyle").value;
+
+  if (!description && !style) {
+    alert("Enter a video description or choose an editing style.");
+    return;
+  }
+
+  const query = [description, style, "CapCut template"]
+    .filter(Boolean)
+    .join(" ");
+
+  window.open(
+    "https://www.google.com/search?q=" + encodeURIComponent(query),
+    "_blank"
+  );
+}
+</script>
 </body>
 </html>
