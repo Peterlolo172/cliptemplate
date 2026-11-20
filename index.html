@@ -43,12 +43,12 @@ header {
 }
 
 .hero {
-  padding: 50px 22px 30px;
+  padding: 40px 22px;
   text-align: center;
 }
 
 .hero h1 {
-  font-size: 38px;
+  font-size: 36px;
   line-height: 1.2;
   margin-bottom: 20px;
 }
@@ -60,7 +60,6 @@ header {
 .hero p {
   color: #a1a1aa;
   line-height: 1.7;
-  margin-bottom: 30px;
 }
 
 .card {
@@ -73,18 +72,17 @@ header {
 
 input {
   width: 100%;
-  padding: 17px;
+  padding: 15px;
   margin: 12px 0;
   background: #080b12;
   border: 1px solid #34384a;
   border-radius: 12px;
   color: white;
-  font-size: 15px;
 }
 
 button {
   width: 100%;
-  padding: 17px;
+  padding: 16px;
   border: none;
   border-radius: 12px;
   background: #8b5cf6;
@@ -94,22 +92,77 @@ button {
   margin-top: 12px;
 }
 
-.upload {
-  border: 1px dashed #555b70;
-  padding: 25px;
-  border-radius: 12px;
-  text-align: center;
-  color: #a1a1aa;
-  margin-top: 15px;
-}
-
-.upload input {
-  border: none;
+button:disabled {
+  opacity: .6;
 }
 
 .section-title {
   margin-bottom: 15px;
   font-size: 20px;
+}
+
+.upload {
+  border: 1px dashed #555b70;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: #a1a1aa;
+  margin-top: 20px;
+}
+
+#results {
+  display: none;
+  margin-top: 25px;
+}
+
+.stat {
+  background: #080b12;
+  padding: 16px;
+  border-radius: 12px;
+  margin-top: 12px;
+  border: 1px solid #292d3b;
+}
+
+.stat small {
+  color: #9ca3af;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.stat strong {
+  font-size: 19px;
+}
+
+video {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+  background: black;
+}
+
+.frames {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.frame {
+  background: #080b12;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid #292d3b;
+}
+
+.frame img {
+  width: 100%;
+  display: block;
+}
+
+.frame p {
+  padding: 8px;
+  font-size: 12px;
+  color: #a1a1aa;
 }
 
 .features {
@@ -139,6 +192,12 @@ footer {
   color: #777c90;
   font-size: 13px;
 }
+
+.message {
+  color: #a78bfa;
+  margin-top: 15px;
+  line-height: 1.6;
+}
 </style>
 </head>
 
@@ -151,61 +210,88 @@ footer {
 
 <section class="hero">
   <h1>Discover the edit<br>behind <span>the video.</span></h1>
-
   <p>
-    Find the CapCut template behind viral videos.
-    Upload or paste a link and uncover how it was made.
+    Analyse videos, discover editing patterns
+    and learn how to recreate them.
   </p>
 </section>
 
 <section class="card">
 
-  <h2 class="section-title">Find your template</h2>
-
-  <input
-    type="url"
-    id="videoLink"
-    placeholder="Paste TikTok video link here..."
-  >
-
-  <button onclick="analyse()">Analyse Video</button>
+  <h2 class="section-title">Video Analyzer</h2>
 
   <div class="upload">
-    <p>Or upload a video from your phone</p>
-
-    <input
-      type="file"
-      id="videoFile"
-      accept="video/*"
-    >
+    <p>Select a video from your device</p>
+    <input type="file" id="videoFile" accept="video/*">
   </div>
 
-  <div id="result" style="margin-top:20px;"></div>
+  <button id="analyseBtn" onclick="analyseVideo()">
+    Analyse My Video
+  </button>
+
+  <div id="message" class="message"></div>
+
+  <div id="results">
+
+    <h2 style="margin-top:25px;">Analysis Report</h2>
+
+    <video id="preview" controls></video>
+
+    <div class="stat">
+      <small>Video Duration</small>
+      <strong id="duration">-</strong>
+    </div>
+
+    <div class="stat">
+      <small>Video Resolution</small>
+      <strong id="resolution">-</strong>
+    </div>
+
+    <div class="stat">
+      <small>Estimated Scene Changes</small>
+      <strong id="cuts">-</strong>
+    </div>
+
+    <div class="stat">
+      <small>Analysis Method</small>
+      <strong>Browser-based</strong>
+    </div>
+
+    <h3 style="margin-top:25px;">Extracted Frames</h3>
+
+    <div id="frames" class="frames"></div>
+
+    <div class="stat">
+      <small>Editing Observations</small>
+      <p id="observations" style="line-height:1.7;"></p>
+    </div>
+
+  </div>
 
 </section>
 
 <section class="features">
 
-  <h2 class="section-title">What ClipTemplate does</h2>
+  <h2 class="section-title">Coming Soon</h2>
 
   <div class="feature">
     <h3>🔎 Template Discovery</h3>
-    <p>Find matching CapCut templates from videos you love.</p>
+    <p>Find CapCut templates that match your videos.</p>
   </div>
 
   <div class="feature">
-    <h3>✂️ Editing Breakdown</h3>
-    <p>Discover cuts, transitions, effects and video timing.</p>
+    <h3>✂️ Transition Detection</h3>
+    <p>Discover transitions and editing patterns.</p>
   </div>
 
   <div class="feature">
-    <h3>🎵 Music Detection</h3>
-    <p>Identify the sound and rhythm used in the video.</p>
+    <h3>🎵 Sound Detection</h3>
+    <p>Identify sounds and music used in videos.</p>
   </div>
 
   <div class="feature">
-    <h3>📱 Easy Recreation</h3>
-    <p>Learn how to recreate the editing style using CapCut.</p>
+    <h3>📱 Recreation Guide</h3>
+    <p>Learn how to recreate edits step by step.</p>
   </div>
 
 </section>
@@ -215,21 +301,285 @@ footer {
 </footer>
 
 <script>
-function analyse() {
-  const link = document.getElementById("videoLink").value;
-  const file = document.getElementById("videoFile").files[0];
-  const result = document.getElementById("result");
 
-  if (!link && !file) {
-    result.innerHTML =
-      "<p style='color:#f87171'>Please paste a video link or upload a video first.</p>";
+let videoURL = null;
+
+function formatTime(seconds) {
+  const mins = Math.floor(seconds / 60);
+  const secs = Math.floor(seconds % 60);
+
+  return mins + "m " + secs + "s";
+}
+
+function analyseVideo() {
+
+  const file = document.getElementById("videoFile").files[0];
+  const message = document.getElementById("message");
+  const button = document.getElementById("analyseBtn");
+
+  if (!file) {
+    message.textContent = "Please select a video first.";
     return;
   }
 
-  result.innerHTML =
-    "<p style='color:#a78bfa'>Your video has been submitted. Our analysis system will be added soon!</p>";
+  if (!file.type.startsWith("video/")) {
+    message.textContent = "Please choose a valid video.";
+    return;
+  }
+
+  if (videoURL) {
+    URL.revokeObjectURL(videoURL);
+  }
+
+  videoURL = URL.createObjectURL(file);
+
+  const video = document.getElementById("preview");
+
+  video.src = videoURL;
+
+  message.textContent = "Preparing your video...";
+  button.disabled = true;
+
+  video.onloadedmetadata = async function() {
+
+    try {
+
+      const duration = video.duration;
+      const width = video.videoWidth;
+      const height = video.videoHeight;
+
+      document.getElementById("duration").textContent =
+        formatTime(duration);
+
+      document.getElementById("resolution").textContent =
+        width + " × " + height;
+
+      document.getElementById("results").style.display = "block";
+
+      document.getElementById("frames").innerHTML = "";
+
+      message.textContent = "Extracting frames...";
+
+      const frameCount = Math.min(
+        6,
+        Math.max(1, Math.floor(duration))
+      );
+
+      const timestamps = [];
+
+      for (let i = 0; i < frameCount; i++) {
+        timestamps.push(
+          duration * (i + 1) / (frameCount + 1)
+        );
+      }
+
+      const images = [];
+
+      for (const time of timestamps) {
+
+        const image = await captureFrame(video, time);
+
+        images.push({
+          time: time,
+          image: image
+        });
+
+      }
+
+      displayFrames(images);
+
+      const sceneChanges = await detectChanges(
+        video,
+        timestamps
+      );
+
+      document.getElementById("cuts").textContent =
+        sceneChanges + " possible changes";
+
+      document.getElementById("observations").textContent =
+        "The video is " + formatTime(duration) +
+        " long and has a resolution of " + width +
+        " × " + height + ". " +
+        "We extracted " + images.length +
+        " sample frames. " +
+        "Our basic detector found " + sceneChanges +
+        " possible visual changes between sampled frames. " +
+        "This is an estimate, not a precise transition count.";
+
+      message.textContent = "Analysis completed!";
+
+    } catch (error) {
+
+      console.error(error);
+
+      message.textContent =
+        "Something went wrong while analysing this video.";
+
+    }
+
+    button.disabled = false;
+
+  };
+
+  video.onerror = function() {
+
+    message.textContent =
+      "This video could not be opened. Try another video.";
+
+    button.disabled = false;
+
+  };
+
 }
+
+function captureFrame(video, time) {
+
+  return new Promise((resolve, reject) => {
+
+    function seek() {
+
+      video.currentTime = time;
+
+    }
+
+    function draw() {
+
+      const canvas = document.createElement("canvas");
+
+      canvas.width = 320;
+      canvas.height = 180;
+
+      const ctx = canvas.getContext("2d");
+
+      ctx.drawImage(video, 0, 0, 320, 180);
+
+      resolve(canvas.toDataURL("image/jpeg", 0.7));
+
+      video.removeEventListener("seeked", draw);
+
+    }
+
+    video.addEventListener("seeked", draw);
+
+    video.addEventListener("error", reject, {once:true});
+
+    seek();
+
+  });
+
+}
+
+function displayFrames(images) {
+
+  const container = document.getElementById("frames");
+
+  container.innerHTML = "";
+
+  images.forEach((item, index) => {
+
+    const div = document.createElement("div");
+
+    div.className = "frame";
+
+    const img = document.createElement("img");
+
+    img.src = item.image;
+
+    const p = document.createElement("p");
+
+    p.textContent =
+      "Frame " + (index + 1) +
+      " · " + formatTime(item.time);
+
+    div.appendChild(img);
+
+    div.appendChild(p);
+
+    container.appendChild(div);
+
+  });
+
+}
+
+async function detectChanges(video, timestamps) {
+
+  if (timestamps.length < 2) {
+    return 0;
+  }
+
+  const canvas = document.createElement("canvas");
+
+  canvas.width = 64;
+  canvas.height = 64;
+
+  const ctx = canvas.getContext("2d");
+
+  let previous = null;
+  let changes = 0;
+
+  for (const time of timestamps) {
+
+    await seekVideo(video, time);
+
+    ctx.drawImage(video, 0, 0, 64, 64);
+
+    const data = ctx.getImageData(
+      0, 0, 64, 64
+    ).data;
+
+    const current = [];
+
+    for (let i = 0; i < data.length; i += 16) {
+      current.push(data[i]);
+      current.push(data[i + 1]);
+      current.push(data[i + 2]);
+    }
+
+    if (previous) {
+
+      let difference = 0;
+
+      for (let i = 0; i < current.length; i++) {
+
+        difference += Math.abs(
+          current[i] - previous[i]
+        );
+
+      }
+
+      const score = difference / current.length;
+
+      if (score > 35) {
+        changes++;
+      }
+
+    }
+
+    previous = current;
+
+  }
+
+  return changes;
+
+}
+
+function seekVideo(video, time) {
+
+  return new Promise(resolve => {
+
+    video.addEventListener(
+      "seeked",
+      resolve,
+      {once:true}
+    );
+
+    video.currentTime = time;
+
+  });
+
+}
+
 </script>
 
 </body>
-  </html>
+</html>
