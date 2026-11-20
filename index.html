@@ -3,495 +3,858 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClipTemplate</title>
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<meta name="theme-color" content="#080914">
+<title>ClipTemplate | AI Video Lab</title>
+
 <style>
+*{box-sizing:border-box;margin:0;padding:0}
+
 :root{
---bg:#09090f;--card:#13131d;--border:#262638;
---purple:#8b5cf6;--light:#c4b5fd;--text:#f5f5f7;
---muted:#9292a6;--green:#4ade80
+ --bg:#080914;
+ --card:#111528;
+ --purple:#9565ff;
+ --blue:#438fff;
+ --cyan:#5ce5ed;
+ --text:#f8f7ff;
+ --muted:#999db9;
 }
-*{box-sizing:border-box}
+
 body{
-margin:0;background:var(--bg);color:var(--text);
-font-family:Inter,Arial,sans-serif
+ background:radial-gradient(ellipse at top,#211747 0%,#080914 48%);
+ color:var(--text);
+ font-family:Arial,sans-serif;
+ min-height:100vh;
 }
+
+.container{
+ width:min(100% - 30px,700px);
+ margin:auto;
+}
+
 header{
-display:flex;justify-content:space-between;align-items:center;
-padding:18px 5%;border-bottom:1px solid var(--border)
+ height:75px;
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border-bottom:1px solid #ffffff12;
 }
-.logo{font-size:23px;font-weight:800;letter-spacing:-1px}
-.logo span{color:var(--purple)}
-.badge{font-size:11px;color:var(--light);background:#211b37;padding:7px 10px;border-radius:20px}
-main{max-width:900px;margin:auto;padding:25px 18px 60px}
-.hero{text-align:center;padding:30px 0 25px}
-.hero h1{font-size:35px;letter-spacing:-1.5px;margin:0 0 12px}
-.hero h1 span{color:var(--light)}
-.hero p{color:var(--muted);font-size:14px;line-height:1.6}
+
+.logo{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ font-size:20px;
+ font-weight:800;
+}
+
+.logo-icon{
+ width:36px;
+ height:36px;
+ display:grid;
+ place-items:center;
+ border-radius:12px;
+ background:linear-gradient(135deg,#a66aff,#428dff);
+ box-shadow:0 0 25px #9565ff66;
+}
+
+.badge{
+ font-size:10px;
+ letter-spacing:1px;
+ color:#c6b6ff;
+ background:#9565ff18;
+ border:1px solid #9565ff55;
+ padding:8px 11px;
+ border-radius:30px;
+}
+
+.hero{
+ text-align:center;
+ padding:55px 0 30px;
+}
+
+.eyebrow{
+ color:#bba5ff;
+ font-size:11px;
+ letter-spacing:2px;
+}
+
+h1{
+ font-size:clamp(38px,10vw,60px);
+ line-height:1.05;
+ margin:18px 0;
+ letter-spacing:-2px;
+}
+
+h1 span{
+ background:linear-gradient(90deg,#b48cff,#65aaff,#63e5ed);
+ -webkit-background-clip:text;
+ color:transparent;
+}
+
+.hero p{
+ color:var(--muted);
+ font-size:14px;
+ line-height:1.7;
+ max-width:430px;
+ margin:auto;
+}
+
 .card{
-background:var(--card);border:1px solid var(--border);
-border-radius:18px;padding:20px;margin-bottom:17px
+ background:linear-gradient(145deg,#171b35,#0e1121);
+ border:1px solid #a18bff25;
+ border-radius:22px;
+ padding:18px;
+ box-shadow:0 15px 45px #0005;
 }
-.upload{
-border:1px dashed #514374;border-radius:15px;
-padding:30px 15px;text-align:center;background:#171323
+
+.upload-area{
+ border:1.5px dashed #9578ff77;
+ border-radius:17px;
+ padding:35px 15px;
+ text-align:center;
+ background:radial-gradient(ellipse at top,#7652ff22,transparent);
 }
-.upload-icon{font-size:35px;margin-bottom:10px}
-.upload h3{margin:5px 0 10px}
-.upload p{color:var(--muted);font-size:13px}
-input[type=file]{display:none}
-.file-btn{
-display:inline-block;background:var(--purple);padding:12px 18px;
-border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer
+
+.upload-icon{
+ width:60px;
+ height:60px;
+ display:grid;
+ place-items:center;
+ margin:auto auto 16px;
+ border-radius:18px;
+ background:#9565ff25;
+ border:1px solid #a68aff66;
+ font-size:28px;
 }
-#fileName{font-size:12px;color:var(--light);margin-top:12px}
-video{width:100%;border-radius:12px;margin-top:15px;background:#000}
+
+.upload-area h2{
+ font-size:18px;
+ margin-bottom:8px;
+}
+
+.upload-area p{
+ color:var(--muted);
+ font-size:12px;
+ margin-bottom:18px;
+}
+
 button{
-border:0;cursor:pointer;color:white;font-weight:bold;
-border-radius:11px;padding:14px;background:var(--purple)
+ cursor:pointer;
+ border:0;
 }
-button:disabled{opacity:.45;cursor:not-allowed}
-.analyse-btn{width:100%;margin-top:15px;font-size:15px}
-.section-title{font-size:17px;font-weight:700;margin:0 0 17px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.stat{padding:16px;border:1px solid var(--border);border-radius:13px;background:#191925}
-.stat label{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
-.stat strong{font-size:20px}
-.stat small{color:var(--light)}
-#results{display:none}
-.progress-wrap{margin-top:18px;display:none}
-.progress-bg{background:#272438;height:6px;border-radius:20px;overflow:hidden}
-.progress-fill{height:100%;width:0;background:var(--purple);transition:width .3s}
-#status{font-size:13px;color:var(--light);margin-top:10px;text-align:center}
-.scene{
-border:1px solid var(--border);border-radius:13px;
-padding:10px;margin-bottom:12px;display:flex;gap:12px;
-align-items:flex-start
+
+.primary{
+ background:linear-gradient(100deg,#9565ff,#438fff);
+ color:white;
+ font-weight:bold;
+ padding:14px 20px;
+ border-radius:12px;
+ box-shadow:0 8px 25px #7655ff44;
 }
-.scene img{width:110px;border-radius:9px;object-fit:cover}
-.scene-content{flex:1}
-.scene-content strong{font-size:13px}
-.scene-content p{font-size:12px;color:var(--muted);line-height:1.5}
-.tag{
-display:inline-block;padding:5px 8px;background:#241d3b;
-color:var(--light);border-radius:7px;font-size:11px;margin:4px 3px 0 0
+
+.primary:disabled{
+ opacity:.4;
+ cursor:not-allowed;
 }
-.steps{display:flex;gap:12px;margin-bottom:15px}
-.step-num{
-min-width:30px;height:30px;border-radius:10px;
-background:#30234d;color:var(--light);
-display:flex;align-items:center;justify-content:center;font-weight:bold
+
+.file-note{
+ color:#777d9c;
+ font-size:10px;
+ margin-top:14px;
 }
-.step-text{font-size:13px;line-height:1.6;color:#ddd}
-.step-text strong{display:block;margin-bottom:4px;color:white}
-.text-result{
-padding:12px;background:#191925;border-radius:10px;
-margin-bottom:10px;font-size:13px;line-height:1.6
+
+.divider{
+ display:flex;
+ align-items:center;
+ gap:12px;
+ color:#777d9c;
+ font-size:10px;
+ margin:20px 0;
 }
-.empty{color:var(--muted);font-size:13px;line-height:1.6}
-.disclaimer{font-size:11px;color:var(--muted);line-height:1.5}
-.search-btn{display:block;text-align:center;text-decoration:none;
-color:white;background:#30234d;padding:14px;border-radius:11px;
-font-weight:bold;margin-top:14px}
-footer{text-align:center;color:#6e6e80;font-size:12px;padding:25px}
-@media(min-width:650px){
-.grid{grid-template-columns:repeat(4,1fr)}
-.hero h1{font-size:46px}
+
+.divider:before,.divider:after{
+ content:"";
+ height:1px;
+ background:#ffffff15;
+ flex:1;
+}
+
+.link-row{
+ display:flex;
+ gap:8px;
+}
+
+input{
+ min-width:0;
+}
+
+.link-row input,.template-input{
+ flex:1;
+ width:100%;
+ background:#090d1c;
+ border:1px solid #393d5c;
+ padding:13px;
+ border-radius:11px;
+ color:white;
+ outline:none;
+}
+
+.link-row button{
+ background:#252044;
+ color:#d7caff;
+ border:1px solid #6756a5;
+ border-radius:11px;
+ padding:0 15px;
+}
+
+.preview{
+ display:none;
+ margin-top:16px;
+}
+
+video{
+ width:100%;
+ max-height:380px;
+ background:#000;
+ border-radius:14px;
+}
+
+.file-info{
+ color:var(--muted);
+ font-size:11px;
+ margin-top:9px;
+}
+
+.analyse{
+ width:100%;
+ margin-top:16px;
+ padding:16px;
+ font-size:14px;
+}
+
+.status{
+ display:none;
+ margin-top:15px;
+ background:#0b1022;
+ border:1px solid #494078;
+ border-radius:12px;
+ padding:13px;
+}
+
+.status-text{
+ display:flex;
+ justify-content:space-between;
+ font-size:11px;
+ margin-bottom:10px;
+}
+
+.progress{
+ height:5px;
+ background:#292d48;
+ border-radius:10px;
+ overflow:hidden;
+}
+
+.progress div{
+ width:0;
+ height:100%;
+ background:linear-gradient(90deg,#9565ff,#5ce5ed);
+ transition:.3s;
+}
+
+.results{
+ display:none;
+ margin-top:25px;
+ padding-bottom:40px;
+}
+
+.section-heading{
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ margin:25px 2px 12px;
+}
+
+.section-heading h3{
+ font-size:16px;
+}
+
+.section-heading span{
+ font-size:9px;
+ color:var(--muted);
+}
+
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:9px;
+}
+
+.stat{
+ background:var(--card);
+ border:1px solid #a18bff25;
+ border-radius:14px;
+ padding:14px 9px;
+}
+
+.stat b{
+ display:block;
+ font-size:17px;
+ margin-bottom:6px;
+}
+
+.stat small{
+ color:var(--muted);
+ font-size:10px;
+}
+
+.panel{
+ background:var(--card);
+ border:1px solid #a18bff25;
+ border-radius:15px;
+ padding:16px;
+}
+
+.panel p{
+ color:var(--muted);
+ font-size:12px;
+ line-height:1.7;
+ margin-top:9px;
+}
+
+.chips{
+ display:flex;
+ flex-wrap:wrap;
+ gap:7px;
+ margin-top:12px;
+}
+
+.chip{
+ font-size:10px;
+ padding:7px 10px;
+ border-radius:30px;
+ color:#d3c7ff;
+ background:#9565ff20;
+ border:1px solid #9565ff55;
+}
+
+.template-input{
+ margin-top:12px;
+}
+
+.search-buttons{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:9px;
+ margin-top:10px;
+}
+
+.search-buttons a{
+ text-align:center;
+ text-decoration:none;
+ padding:13px 5px;
+ border-radius:11px;
+ color:white;
+ font-size:11px;
+ font-weight:bold;
+ background:#272044;
+ border:1px solid #755bc2;
+}
+
+.search-buttons a:last-child{
+ background:#102d4b;
+ border-color:#3974a9;
+}
+
+.steps{
+ display:grid;
+ gap:10px;
+}
+
+.step{
+ display:flex;
+ gap:12px;
+ padding:14px;
+ background:var(--card);
+ border:1px solid #a18bff25;
+ border-radius:13px;
+}
+
+.number{
+ width:27px;
+ height:27px;
+ flex-shrink:0;
+ display:grid;
+ place-items:center;
+ background:#9565ff30;
+ border-radius:8px;
+ color:#c7b5ff;
+ font-size:11px;
+}
+
+.step b{
+ font-size:12px;
+}
+
+.step p{
+ color:var(--muted);
+ font-size:11px;
+ line-height:1.6;
+ margin-top:5px;
+}
+
+footer{
+ text-align:center;
+ padding:25px 0 35px;
+ color:#6e7391;
+ font-size:10px;
+ line-height:1.8;
+}
+
+@media(min-width:600px){
+ .hero{padding-top:70px}
+ .card{padding:22px}
+ .upload-area{padding:45px}
 }
 </style>
 </head>
+
 <body>
+<div class="container">
 
 <header>
-<div class="logo">Clip<span>Template</span> ✂</div>
-<div class="badge">VIDEO LAB</div>
+ <div class="logo">
+  <div class="logo-icon">✦</div>
+  ClipTemplate
+ </div>
+ <div class="badge">AI VIDEO LAB</div>
 </header>
 
 <main>
+
 <section class="hero">
-<h1>Break down any <span>video.</span></h1>
-<p>Discover its structure, on-screen text and editing style.<br>Turn inspiration into your next edit.</p>
+ <div class="eyebrow">✧ INTELLIGENT VIDEO DISCOVERY</div>
+ <h1>Your edit.<br><span>Understood.</span></h1>
+ <p>
+ Upload a video, discover similar templates,
+ understand its editing style and recreate the look.
+ </p>
 </section>
 
 <section class="card">
-<div class="upload">
-<div class="upload-icon">🎬</div>
-<h3>Upload your video</h3>
-<p>Choose a video from your phone to get started.</p>
-<label class="file-btn" for="file">＋ Choose Video</label>
-<input type="file" id="file" accept="video/*">
-<div id="fileName"></div>
-</div>
 
-<video id="video" controls style="display:none"></video>
+ <div class="upload-area" id="dropZone">
+  <div class="upload-icon">↥</div>
+  <h2>Drop your video here</h2>
+  <p>Upload a video from your phone to get started.</p>
 
-<button class="analyse-btn" id="analyse" disabled>
-Analyse Video →
-</button>
+  <button class="primary" id="chooseBtn">
+   + Upload a video
+  </button>
 
-<div class="progress-wrap" id="progressWrap">
-<div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
-<div id="status">Preparing...</div>
-</div>
+  <input type="file" id="videoFile"
+  accept="video/*" hidden>
+
+  <div class="file-note">
+   MP4 · MOV · WEBM · Mobile friendly
+  </div>
+ </div>
+
+ <div class="divider">OR PASTE A VIDEO LINK</div>
+
+ <div class="link-row">
+  <input id="videoLink"
+  placeholder="Paste a public video URL">
+
+  <button id="openLink">Open</button>
+ </div>
+
+ <div class="preview" id="preview">
+  <video id="video" controls playsinline></video>
+  <div class="file-info" id="fileInfo"></div>
+ </div>
+
+ <button class="primary analyse" id="analyseBtn" disabled>
+  ✦ Analyse my video
+ </button>
+
+ <div class="status" id="status">
+  <div class="status-text">
+   <span id="statusText">Preparing analysis...</span>
+   <span id="percentage">0%</span>
+  </div>
+  <div class="progress">
+   <div id="progressBar"></div>
+  </div>
+ </div>
+
 </section>
 
-<div id="results">
+<section class="results" id="results">
 
-<section class="card">
-<h2 class="section-title">📊 Video Overview</h2>
-<div class="grid">
-<div class="stat"><label>Duration</label><strong id="duration">--</strong></div>
-<div class="stat"><label>Resolution</label><strong id="resolution">--</strong></div>
-<div class="stat"><label>Format</label><strong id="orientation">--</strong></div>
-<div class="stat"><label>Visual changes</label><strong id="changes">--</strong></div>
-</div>
+ <div class="section-heading">
+  <h3>Video snapshot</h3>
+  <span>VIDEO ANALYSIS</span>
+ </div>
+
+ <div class="stats">
+  <div class="stat">
+   <b id="duration">—</b>
+   <small>Duration</small>
+  </div>
+
+  <div class="stat">
+   <b id="resolution">—</b>
+   <small>Resolution</small>
+  </div>
+
+  <div class="stat">
+   <b id="format">—</b>
+   <small>Format</small>
+  </div>
+ </div>
+
+ <div class="section-heading">
+  <h3>Visual breakdown</h3>
+  <span>FIRST-PASS SCAN</span>
+ </div>
+
+ <div class="panel">
+  <b>Video observations</b>
+  <p id="breakdown">
+   Your video analysis will appear here.
+  </p>
+  <div class="chips" id="chips"></div>
+ </div>
+
+ <div class="section-heading">
+  <h3>Find similar templates</h3>
+  <span>TEMPLATE DISCOVERY</span>
+ </div>
+
+ <div class="panel">
+  <p>
+   Search for CapCut templates using the suggested
+   keywords or edit the search phrase.
+  </p>
+
+  <input class="template-input" id="query"
+  value="CapCut video edit template">
+
+  <div class="search-buttons">
+   <a id="google" target="_blank" rel="noopener">
+    Search templates ↗
+   </a>
+
+   <a href="https://www.capcut.com/templates"
+   target="_blank" rel="noopener">
+    Explore CapCut ↗
+   </a>
+  </div>
+ </div>
+
+ <div class="section-heading">
+  <h3>Recreation guide</h3>
+  <span>EDITING WORKFLOW</span>
+ </div>
+
+ <div class="steps">
+
+  <div class="step">
+   <div class="number">01</div>
+   <div>
+    <b>Find your template</b>
+    <p>Compare template previews with your original video.</p>
+   </div>
+  </div>
+
+  <div class="step">
+   <div class="number">02</div>
+   <div>
+    <b>Replace the media</b>
+    <p>Import your own clips and arrange them in the sequence.</p>
+   </div>
+  </div>
+
+  <div class="step">
+   <div class="number">03</div>
+   <div>
+    <b>Match the timing</b>
+    <p>Adjust clip lengths and transitions to match the edit.</p>
+   </div>
+  </div>
+
+  <div class="step">
+   <div class="number">04</div>
+   <div>
+    <b>Polish and export</b>
+    <p>Fine-tune colours, text, effects and audio.</p>
+   </div>
+  </div>
+
+ </div>
+
 </section>
 
-<section class="card">
-<h2 class="section-title">🎞 Scene Breakdown</h2>
-<div id="scenes"></div>
-</section>
-
-<section class="card">
-<h2 class="section-title">📝 Text detected</h2>
-<div id="texts"></div>
-</section>
-
-<section class="card">
-<h2 class="section-title">✨ Editing Style</h2>
-<div id="style"></div>
-</section>
-
-<section class="card">
-<h2 class="section-title">🛠 Recreate in CapCut</h2>
-<div id="recipe"></div>
-<a id="capcutSearch" class="search-btn" target="_blank">
-🔎 Search for similar templates
-</a>
-</section>
-
-<section class="card">
-<p class="disclaimer">
-ClipTemplate estimates video structure using sampled frames.
-Scene changes, text recognition and editing suggestions may not
-identify the original effects, music or CapCut template.
-</p>
-</section>
-</div>
 </main>
 
-<footer>ClipTemplate · Made for creators.</footer>
+<footer>
+ ClipTemplate · Decode. Discover. Recreate.<br>
+ Browser-based video analysis. Advanced AI features coming next.
+</footer>
+
+</div>
 
 <script>
-const fileInput=document.getElementById('file');
-const video=document.getElementById('video');
-const analyseBtn=document.getElementById('analyse');
-const status=document.getElementById('status');
-const progressWrap=document.getElementById('progressWrap');
-const progressFill=document.getElementById('progressFill');
+const fileInput=document.getElementById("videoFile");
+const video=document.getElementById("video");
+const preview=document.getElementById("preview");
+const analyseBtn=document.getElementById("analyseBtn");
+const results=document.getElementById("results");
 
-let videoURL=null;
+let currentFile=null;
+let objectUrl=null;
 
-fileInput.addEventListener('change',()=>{
-const file=fileInput.files[0];
-if(!file)return;
+document.getElementById("chooseBtn").onclick=()=>{
+ fileInput.click();
+};
 
-if(videoURL)URL.revokeObjectURL(videoURL);
-videoURL=URL.createObjectURL(file);
+fileInput.onchange=()=>{
+ if(fileInput.files[0]){
+  loadVideo(fileInput.files[0]);
+ }
+};
 
-video.src=videoURL;
-video.style.display='block';
-document.getElementById('fileName').textContent=file.name;
-analyseBtn.disabled=false;
-document.getElementById('results').style.display='none';
-progressWrap.style.display='none';
+function loadVideo(file){
+
+ if(objectUrl)URL.revokeObjectURL(objectUrl);
+
+ currentFile=file;
+ objectUrl=URL.createObjectURL(file);
+
+ video.src=objectUrl;
+ preview.style.display="block";
+
+ document.getElementById("fileInfo").textContent=
+ file.name+" · "+(file.size/1048576).toFixed(1)+" MB";
+
+ analyseBtn.disabled=true;
+ results.style.display="none";
+
+ video.onloadedmetadata=()=>{
+  analyseBtn.disabled=false;
+ };
+}
+
+const dropZone=document.getElementById("dropZone");
+
+["dragenter","dragover"].forEach(event=>{
+ dropZone.addEventListener(event,e=>{
+  e.preventDefault();
+  dropZone.style.borderColor="#5ce5ed";
+ });
 });
 
-function seek(t){
-return new Promise(resolve=>{
-const done=()=>resolve();
-video.addEventListener('seeked',done,{once:true});
-video.currentTime=t;
+["dragleave","drop"].forEach(event=>{
+ dropZone.addEventListener(event,e=>{
+  e.preventDefault();
+  dropZone.style.borderColor="#9578ff77";
+ });
 });
+
+dropZone.addEventListener("drop",e=>{
+ const file=e.dataTransfer.files[0];
+ if(file&&file.type.startsWith("video/")){
+  loadVideo(file);
+ }
+});
+
+document.getElementById("openLink").onclick=()=>{
+ const url=document.getElementById("videoLink").value.trim();
+
+ if(!url){
+  alert("Paste a video link first.");
+  return;
+ }
+
+ window.open(url,"_blank","noopener");
+
+ alert(
+ "The link has been opened separately. Upload a video file here for browser analysis."
+ );
+};
+
+function formatTime(seconds){
+ const minutes=Math.floor(seconds/60);
+ const secs=Math.floor(seconds%60);
+ return minutes+":"+String(secs).padStart(2,"0");
 }
 
-function capture(){
-const canvas=document.createElement('canvas');
-canvas.width=240;
-canvas.height=135;
-canvas.getContext('2d').drawImage(video,0,0,240,135);
-return canvas;
-}
-
-function compare(a,b){
-const x=a.getContext('2d').getImageData(0,0,240,135).data;
-const y=b.getContext('2d').getImageData(0,0,240,135).data;
-let total=0,count=0;
-
-for(let i=0;i<x.length;i+=40){
-total+=Math.abs(x[i]-y[i]);
-total+=Math.abs(x[i+1]-y[i+1]);
-total+=Math.abs(x[i+2]-y[i+2]);
-count+=3;
-}
-return total/count;
-}
-
-function formatTime(s){
-const m=Math.floor(s/60);
-const sec=Math.floor(s%60);
-return m+':'+String(sec).padStart(2,'0');
-}
-
-function escapeHTML(s){
-return s.replace(/[&<>"']/g,c=>({
-'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[c]));
-}
-
-function setProgress(percent,msg){
-progressFill.style.width=percent+'%';
-status.textContent=msg;
+function progress(value,message){
+ document.getElementById("progressBar").style.width=value+"%";
+ document.getElementById("percentage").textContent=value+"%";
+ document.getElementById("statusText").textContent=message;
 }
 
 analyseBtn.onclick=async()=>{
-if(!video.duration||!isFinite(video.duration))return;
 
-analyseBtn.disabled=true;
-progressWrap.style.display='block';
-document.getElementById('results').style.display='block';
+ if(!currentFile||!video.videoWidth)return;
 
-const duration=video.duration;
-const n=Math.min(10,Math.max(3,Math.ceil(duration/3)));
-const frames=[];
-const times=[];
+ analyseBtn.disabled=true;
+ results.style.display="none";
 
-try{
-for(let i=0;i<n;i++){
-setProgress((i/n)*25,'Sampling frame '+(i+1)+' of '+n);
-const t=Math.min(duration-.05,duration*i/n);
-await seek(t);
-frames.push(capture());
-times.push(t);
-}
+ const status=document.getElementById("status");
+ status.style.display="block";
 
-document.getElementById('duration').textContent=formatTime(duration);
-document.getElementById('resolution').textContent=video.videoWidth+'×'+video.videoHeight;
-document.getElementById('orientation').textContent=
-video.videoWidth>video.videoHeight?'Landscape':'Portrait';
+ progress(10,"Reading video details...");
 
-let cutCount=0;
-const differences=[];
+ const duration=video.duration;
+ const width=video.videoWidth;
+ const height=video.videoHeight;
 
-for(let i=1;i<frames.length;i++){
-const d=compare(frames[i-1],frames[i]);
-differences.push(d);
-if(d>25)cutCount++;
-}
+ document.getElementById("duration").textContent=
+ formatTime(duration);
 
-document.getElementById('changes').textContent=cutCount;
+ document.getElementById("resolution").textContent=
+ width+" × "+height;
 
-const scenes=document.getElementById('scenes');
-scenes.innerHTML='';
+ const portrait=height>width;
 
-frames.forEach((frame,i)=>{
-const div=document.createElement('div');
-div.className='scene';
+ document.getElementById("format").textContent=
+ portrait?"Portrait":width===height?"Square":"Landscape";
 
-const img=document.createElement('img');
-img.src=frame.toDataURL();
+ progress(25,"Preparing visual scan...");
 
-const content=document.createElement('div');
-content.className='scene-content';
+ const canvas=document.createElement("canvas");
+ canvas.width=96;
+ canvas.height=96;
 
-const heading=document.createElement('strong');
-heading.textContent='Frame '+(i+1);
+ const ctx=canvas.getContext("2d",{
+  willReadFrequently:true
+ });
 
-const p=document.createElement('p');
-p.textContent='Sampled at '+formatTime(times[i]);
+ const samples=Math.min(8,Math.max(3,Math.ceil(duration/5)));
 
-content.appendChild(heading);
-content.appendChild(p);
+ let previous=null;
+ let changes=0;
+ let scanned=0;
 
-div.appendChild(img);
-div.appendChild(content);
-scenes.appendChild(div);
-});
+ for(let i=0;i<samples;i++){
 
-setProgress(30,'Preparing text recognition...');
-
-let recognized=[];
-let worker=null;
-
-try{
-if(typeof Tesseract!=='undefined'){
-worker=await Tesseract.createWorker('eng');
-
-for(let i=0;i<frames.length;i++){
-setProgress(30+(i/frames.length)*55,
-'Reading frame '+(i+1)+' of '+frames.length);
-
-const result=await worker.recognize(frames[i]);
-const text=result.data.text.trim();
-
-if(text){
-recognized.push({time:times[i],text:text});
-}
-}
-await worker.terminate();
-}
-}catch(e){
-if(worker){
-try{await worker.terminate()}catch(err){}
-}
-}
-
-const texts=document.getElementById('texts');
-texts.innerHTML='';
-
-if(recognized.length){
-recognized.forEach(item=>{
-const div=document.createElement('div');
-div.className='text-result';
-div.innerHTML='<strong>'+formatTime(item.time)+'</strong><br>'+
-escapeHTML(item.text);
-texts.appendChild(div);
-});
-}else{
-texts.innerHTML='<p class="empty">No readable text was detected in the sampled frames.</p>';
-}
-
-const portrait=video.videoHeight>video.videoWidth;
-const changeLevel=cutCount;
-
-let styleText='';
-
-if(changeLevel>=5){
-styleText='The sampled frames show frequent visual differences. This may be a fast-paced edit, multiple shots or changing visual content.';
-}else if(changeLevel>=2){
-styleText='The sampled frames show several visual differences. This may indicate a multi-scene edit or changing content.';
-}else{
-styleText='The sampled frames show relatively few large visual differences. This may be a continuous shot, a static scene or a subtle edit.';
-}
-
-document.getElementById('style').innerHTML=
-'<p class="empty">'+styleText+'</p>'+
-'<div class="tag">'+(portrait?'Portrait video':'Landscape video')+'</div>'+
-'<div class="tag">'+frames.length+' sampled frames</div>'+
-'<div class="tag">'+cutCount+' estimated changes</div>'+
-'<div class="tag">'+duration.toFixed(1)+' seconds</div>';
-
-const recipe=[
-['Import','Open CapCut and import the original video.'],
-['Structure','Use the sampled frames as a rough guide to the video structure.'],
-['Timing','Trim clips and align the important moments with your soundtrack.'],
-['Text','Use the detected text above to recreate any visible captions.'],
-['Effects','Experiment with zoom, motion blur, transitions or filters only where they fit the footage.'],
-['Export','Export using the same orientation and a suitable resolution.']
-];
-
-document.getElementById('recipe').innerHTML=recipe.map((r,i)=>
-'<div class="steps"><div class="step-num">'+(i+1)+'</div>'+
-'<div class="step-text"><strong>'+r[0]+'</strong>'+r[1]+'</div></div>'
-).join('');
-
-document.getElementById('capcutSearch').href=
-'https://www.google.com/search?q=CapCut+video+templates';
-
-setProgress(100,'Analysis complete ✓');
-}catch(e){
-status.textContent='Something went wrong. Try a shorter video.';
-console.error(e);
-}
-analyseBtn.disabled=false;
-};
-</script>
-  <style>
-.template-finder {
-  background: #17152b;
-  border: 1px solid #393354;
-  border-radius: 18px;
-  padding: 20px;
-  margin: 25px 0;
-  color: white;
-}
-.template-finder h2 {
-  margin: 0 0 8px;
-  font-size: 22px;
-}
-.template-finder p {
-  color: #aaa5bd;
-  font-size: 14px;
-}
-.template-finder input,
-.template-finder select {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 14px;
-  margin: 9px 0;
-  border-radius: 10px;
-  border: 1px solid #494264;
-  background: #24213b;
-  color: white;
-  font-size: 15px;
-}
-.template-finder button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 10px;
-  border: 0;
-  border-radius: 10px;
-  background: linear-gradient(100deg,#8b5cf6,#d946ef);
-  color: white;
-  font-weight: bold;
-  font-size: 15px;
-}
-</style>
-
-  <section class="template-finder">
-  <h2>🔎 Find Similar Templates</h2>
-  <p>Describe your video and discover CapCut templates with a similar style.</p>
-
-  <input id="templateDescription"
-    placeholder="e.g. Football edit with slow motion and beat sync">
-
-  <select id="templateStyle">
-    <option value="">Choose editing style</option>
-    <option value="Velocity edit">Velocity</option>
-    <option value="Slow motion edit">Slow motion</option>
-    <option value="Beat sync edit">Beat sync</option>
-    <option value="Cinematic edit">Cinematic</option>
-    <option value="Football edit">Football</option>
-    <option value="Photo slideshow">Photo slideshow</option>
-    <option value="Transition edit">Transitions</option>
-    <option value="Lyrics edit">Lyrics</option>
-  </select>
-
-  <button onclick="findTemplates()">Find Templates →</button>
-</section>
-
-<script>
-function findTemplates() {
-  const description =
-    document.getElementById("templateDescription").value.trim();
-
-  const style =
-    document.getElementById("templateStyle").value;
-
-  if (!description && !style) {
-    alert("Enter a video description or choose an editing style.");
-    return;
-  }
-
-  const query = [description, style, "CapCut template"]
-    .filter(Boolean)
-    .join(" ");
-
-  window.open(
-    "https://www.google.com/search?q=" + encodeURIComponent(query),
-    "_blank"
+  const time=Math.min(
+   Math.max(.1,duration*(i+.5)/samples),
+   Math.max(.1,duration-.1)
   );
+
+  await new Promise(resolve=>{
+
+   let finished=false;
+
+   const done=()=>{
+    if(finished)return;
+    finished=true;
+    resolve();
+   };
+
+   video.addEventListener("seeked",done,{once:true});
+   video.currentTime=time;
+
+   setTimeout(done,2000);
+  });
+
+  try{
+
+   ctx.drawImage(video,0,0,96,96);
+
+   const data=ctx.getImageData(0,0,96,96).data;
+
+   if(previous){
+
+    let difference=0;
+
+    for(let p=0;p<data.length;p+=16){
+     difference+=
+      Math.abs(data[p]-previous[p])+
+      Math.abs(data[p+1]-previous[p+1])+
+      Math.abs(data[p+2]-previous[p+2]);
+    }
+
+    if(difference/(data.length/16)>35){
+     changes++;
+    }
+   }
+
+   previous=data;
+   scanned++;
+
+  }catch(error){}
+
+  progress(
+   30+Math.round((i+1)/samples*60),
+   "Comparing video frames..."
+  );
+ }
+
+ const changeLabel=
+ changes>=Math.ceil(samples*.55)
+ ?"Frequent visual changes"
+ :changes>=2
+ ?"Some visual changes"
+ :"Relatively consistent visuals";
+
+ document.getElementById("breakdown").textContent=
+ "Your "+(portrait?"portrait":width===height?"square":"landscape")+
+ " video is "+formatTime(duration)+" long. We sampled "+
+ scanned+" frames and found "+changeLabel.toLowerCase()+
+ ". This is a basic visual scan, not full AI understanding.";
+
+ const tags=[
+  portrait?"Portrait format":width===height?"Square format":"Landscape format",
+  changeLabel,
+  duration<20?"Short-form video":"Longer video"
+ ];
+
+ document.getElementById("chips").innerHTML=
+ tags.map(tag=>'<span class="chip">'+tag+'</span>').join("");
+
+ const search=
+ "CapCut "+(changes>=3?"transition edit":"video edit")+
+ " template "+(portrait?"portrait":"");
+
+ document.getElementById("query").value=search.trim();
+
+ updateSearch();
+
+ progress(100,"Analysis complete");
+
+ results.style.display="block";
+ analyseBtn.disabled=false;
+
+ setTimeout(()=>{
+  results.scrollIntoView({
+   behavior:"smooth",
+   block:"start"
+  });
+ },250);
+};
+
+function updateSearch(){
+
+ const query=
+ document.getElementById("query").value.trim()||
+ "CapCut video template";
+
+ document.getElementById("google").href=
+ "https://www.google.com/search?q="+
+ encodeURIComponent(query+" CapCut template");
 }
+
+document.getElementById("query").addEventListener(
+ "input",updateSearch
+);
+
+updateSearch();
 </script>
+
 </body>
-</html>
+  </html>
