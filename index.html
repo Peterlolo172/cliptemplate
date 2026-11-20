@@ -4,582 +4,219 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClipTemplate</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+*{box-sizing:border-box}
+body{
+margin:0;background:#080910;color:#fff;
+font-family:Arial,sans-serif;
 }
-
-body {
-  background: #080b12;
-  color: white;
-  font-family: Arial, sans-serif;
+header{
+padding:22px;display:flex;justify-content:space-between;
+align-items:center;border-bottom:1px solid #222;
 }
-
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 22px;
+.logo{font-size:25px;font-weight:bold}
+.logo span{color:#9b65ff}
+main{max-width:750px;margin:auto;padding:25px 18px}
+.hero{text-align:center;padding:50px 5px}
+.hero h1{font-size:42px;line-height:1.2}
+.hero h1 span{color:#9b65ff}
+.hero p{color:#aaa;font-size:18px;line-height:1.7}
+.card{
+background:#121522;padding:25px;border-radius:25px;
+border:1px solid #292d40;margin-top:25px;
 }
-
-.logo {
-  font-size: 24px;
-  font-weight: bold;
+input[type=file]{width:100%;padding:20px;background:#080910;
+color:white;border-radius:15px}
+button{
+width:100%;border:none;padding:18px;
+background:#8955f6;color:white;font-size:18px;
+font-weight:bold;border-radius:15px;margin-top:20px;
 }
-
-.logo span {
-  color: #a78bfa;
+button:disabled{opacity:.6}
+#results{display:none;margin-top:30px}
+.frame{
+background:#080910;border:1px solid #282c3b;
+padding:15px;border-radius:15px;margin-bottom:15px;
 }
-
-.badge {
-  font-size: 12px;
-  border: 1px solid #292d3b;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: #a78bfa;
+.frame img{width:100%;border-radius:10px}
+.frame h3{margin-bottom:5px}
+.frame p{color:#aaa;line-height:1.6}
+.badge{
+display:inline-block;background:#24203b;color:#c4a5ff;
+padding:7px 12px;border-radius:30px;margin:5px 3px;
+font-size:13px
 }
-
-.hero {
-  padding: 40px 22px;
-  text-align: center;
-}
-
-.hero h1 {
-  font-size: 36px;
-  line-height: 1.2;
-  margin-bottom: 20px;
-}
-
-.hero h1 span {
-  color: #a78bfa;
-}
-
-.hero p {
-  color: #a1a1aa;
-  line-height: 1.7;
-}
-
-.card {
-  margin: 20px;
-  padding: 22px;
-  background: #111522;
-  border: 1px solid #292d3b;
-  border-radius: 18px;
-}
-
-input {
-  width: 100%;
-  padding: 15px;
-  margin: 12px 0;
-  background: #080b12;
-  border: 1px solid #34384a;
-  border-radius: 12px;
-  color: white;
-}
-
-button {
-  width: 100%;
-  padding: 16px;
-  border: none;
-  border-radius: 12px;
-  background: #8b5cf6;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 12px;
-}
-
-button:disabled {
-  opacity: .6;
-}
-
-.section-title {
-  margin-bottom: 15px;
-  font-size: 20px;
-}
-
-.upload {
-  border: 1px dashed #555b70;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  color: #a1a1aa;
-  margin-top: 20px;
-}
-
-#results {
-  display: none;
-  margin-top: 25px;
-}
-
-.stat {
-  background: #080b12;
-  padding: 16px;
-  border-radius: 12px;
-  margin-top: 12px;
-  border: 1px solid #292d3b;
-}
-
-.stat small {
-  color: #9ca3af;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.stat strong {
-  font-size: 19px;
-}
-
-video {
-  width: 100%;
-  margin-top: 20px;
-  border-radius: 12px;
-  background: black;
-}
-
-.frames {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.frame {
-  background: #080b12;
-  border-radius: 10px;
-  overflow: hidden;
-  border: 1px solid #292d3b;
-}
-
-.frame img {
-  width: 100%;
-  display: block;
-}
-
-.frame p {
-  padding: 8px;
-  font-size: 12px;
-  color: #a1a1aa;
-}
-
-.features {
-  padding: 20px;
-}
-
-.feature {
-  background: #111522;
-  border: 1px solid #292d3b;
-  border-radius: 15px;
-  padding: 20px;
-  margin: 12px 0;
-}
-
-.feature h3 {
-  margin-bottom: 10px;
-}
-
-.feature p {
-  color: #a1a1aa;
-  line-height: 1.6;
-}
-
-footer {
-  padding: 30px;
-  text-align: center;
-  color: #777c90;
-  font-size: 13px;
-}
-
-.message {
-  color: #a78bfa;
-  margin-top: 15px;
-  line-height: 1.6;
-}
+#loading{display:none;text-align:center;padding:20px;color:#b99aff}
+footer{text-align:center;padding:30px;color:#777}
 </style>
 </head>
-
 <body>
 
 <header>
-  <div class="logo">Clip<span>Template</span></div>
-  <div class="badge">VIDEO EDIT AI</div>
+<div class="logo">Clip<span>Template</span></div>
+<div style="color:#b99aff">VIDEO EDIT AI</div>
 </header>
 
+<main>
+
 <section class="hero">
-  <h1>Discover the edit<br>behind <span>the video.</span></h1>
-  <p>
-    Analyse videos, discover editing patterns
-    and learn how to recreate them.
-  </p>
+<h1>Discover the edit<br>behind <span>the video.</span></h1>
+<p>Analyse videos, discover editing patterns
+and learn how to recreate them.</p>
 </section>
 
 <section class="card">
+<h2>🎬 Video Analyzer</h2>
+<p style="color:#aaa">Upload a video to reveal its editing structure.</p>
 
-  <h2 class="section-title">Video Analyzer</h2>
+<input type="file" id="videoInput" accept="video/*">
 
-  <div class="upload">
-    <p>Select a video from your device</p>
-    <input type="file" id="videoFile" accept="video/*">
-  </div>
+<button onclick="analyseVideo()">Analyse My Video</button>
 
-  <button id="analyseBtn" onclick="analyseVideo()">
-    Analyse My Video
-  </button>
+<div id="loading">
+⏳ Analysing video and extracting scenes...
+</div>
+</section>
 
-  <div id="message" class="message"></div>
+<section id="results">
 
-  <div id="results">
+<div class="card">
+<h2>📊 Video Overview</h2>
+<div id="overview"></div>
+</div>
 
-    <h2 style="margin-top:25px;">Analysis Report</h2>
+<div class="card">
+<h2>🎞️ Scene Timeline</h2>
+<div id="timeline"></div>
+</div>
 
-    <video id="preview" controls></video>
+<div class="card">
+<h2>🧠 Editing Observations</h2>
+<div id="observations"></div>
+</div>
 
-    <div class="stat">
-      <small>Video Duration</small>
-      <strong id="duration">-</strong>
-    </div>
-
-    <div class="stat">
-      <small>Video Resolution</small>
-      <strong id="resolution">-</strong>
-    </div>
-
-    <div class="stat">
-      <small>Estimated Scene Changes</small>
-      <strong id="cuts">-</strong>
-    </div>
-
-    <div class="stat">
-      <small>Analysis Method</small>
-      <strong>Browser-based</strong>
-    </div>
-
-    <h3 style="margin-top:25px;">Extracted Frames</h3>
-
-    <div id="frames" class="frames"></div>
-
-    <div class="stat">
-      <small>Editing Observations</small>
-      <p id="observations" style="line-height:1.7;"></p>
-    </div>
-
-  </div>
+<div class="card">
+<h2>✂️ How to Recreate It</h2>
+<div id="instructions"></div>
+</div>
 
 </section>
 
-<section class="features">
-
-  <h2 class="section-title">Coming Soon</h2>
-
-  <div class="feature">
-    <h3>🔎 Template Discovery</h3>
-    <p>Find CapCut templates that match your videos.</p>
-  </div>
-
-  <div class="feature">
-    <h3>✂️ Transition Detection</h3>
-    <p>Discover transitions and editing patterns.</p>
-  </div>
-
-  <div class="feature">
-    <h3>🎵 Sound Detection</h3>
-    <p>Identify sounds and music used in videos.</p>
-  </div>
-
-  <div class="feature">
-    <h3>📱 Recreation Guide</h3>
-    <p>Learn how to recreate edits step by step.</p>
-  </div>
-
-</section>
+</main>
 
 <footer>
-  ClipTemplate · Discover the edit behind the video.
+ClipTemplate © 2026 — Discover the edit.
 </footer>
 
 <script>
+async function analyseVideo(){
 
-let videoURL = null;
+const file=document.getElementById("videoInput").files[0];
 
-function formatTime(seconds) {
-  const mins = Math.floor(seconds / 60);
-  const secs = Math.floor(seconds % 60);
-
-  return mins + "m " + secs + "s";
+if(!file){
+alert("Please select a video first.");
+return;
 }
 
-function analyseVideo() {
+document.getElementById("loading").style.display="block";
+document.getElementById("results").style.display="none";
 
-  const file = document.getElementById("videoFile").files[0];
-  const message = document.getElementById("message");
-  const button = document.getElementById("analyseBtn");
+const video=document.createElement("video");
+video.src=URL.createObjectURL(file);
+video.muted=true;
+video.playsInline=true;
 
-  if (!file) {
-    message.textContent = "Please select a video first.";
-    return;
-  }
+video.onloadedmetadata=async()=>{
 
-  if (!file.type.startsWith("video/")) {
-    message.textContent = "Please choose a valid video.";
-    return;
-  }
+const duration=video.duration;
+const width=video.videoWidth;
+const height=video.videoHeight;
 
-  if (videoURL) {
-    URL.revokeObjectURL(videoURL);
-  }
+const canvas=document.createElement("canvas");
+const ctx=canvas.getContext("2d");
 
-  videoURL = URL.createObjectURL(file);
+canvas.width=320;
+canvas.height=320*(height/width);
 
-  const video = document.getElementById("preview");
+const count=Math.min(8,Math.max(2,Math.ceil(duration/5)));
+let scenes=[];
 
-  video.src = videoURL;
+for(let i=0;i<count;i++){
 
-  message.textContent = "Preparing your video...";
-  button.disabled = true;
+const time=Math.min(duration-0.1,(duration/count)*i);
 
-  video.onloadedmetadata = async function() {
+await new Promise(resolve=>{
+video.currentTime=time;
+video.onseeked=resolve;
+});
 
-    try {
+ctx.drawImage(video,0,0,canvas.width,canvas.height);
 
-      const duration = video.duration;
-      const width = video.videoWidth;
-      const height = video.videoHeight;
-
-      document.getElementById("duration").textContent =
-        formatTime(duration);
-
-      document.getElementById("resolution").textContent =
-        width + " × " + height;
-
-      document.getElementById("results").style.display = "block";
-
-      document.getElementById("frames").innerHTML = "";
-
-      message.textContent = "Extracting frames...";
-
-      const frameCount = Math.min(
-        6,
-        Math.max(1, Math.floor(duration))
-      );
-
-      const timestamps = [];
-
-      for (let i = 0; i < frameCount; i++) {
-        timestamps.push(
-          duration * (i + 1) / (frameCount + 1)
-        );
-      }
-
-      const images = [];
-
-      for (const time of timestamps) {
-
-        const image = await captureFrame(video, time);
-
-        images.push({
-          time: time,
-          image: image
-        });
-
-      }
-
-      displayFrames(images);
-
-      const sceneChanges = await detectChanges(
-        video,
-        timestamps
-      );
-
-      document.getElementById("cuts").textContent =
-        sceneChanges + " possible changes";
-
-      document.getElementById("observations").textContent =
-        "The video is " + formatTime(duration) +
-        " long and has a resolution of " + width +
-        " × " + height + ". " +
-        "We extracted " + images.length +
-        " sample frames. " +
-        "Our basic detector found " + sceneChanges +
-        " possible visual changes between sampled frames. " +
-        "This is an estimate, not a precise transition count.";
-
-      message.textContent = "Analysis completed!";
-
-    } catch (error) {
-
-      console.error(error);
-
-      message.textContent =
-        "Something went wrong while analysing this video.";
-
-    }
-
-    button.disabled = false;
-
-  };
-
-  video.onerror = function() {
-
-    message.textContent =
-      "This video could not be opened. Try another video.";
-
-    button.disabled = false;
-
-  };
-
+scenes.push({
+time:time,
+image:canvas.toDataURL("image/jpeg",0.7)
+});
 }
 
-function captureFrame(video, time) {
+document.getElementById("overview").innerHTML=`
+<p><span class="badge">Duration: ${duration.toFixed(1)} sec</span></p>
+<p><span class="badge">Resolution: ${width} × ${height}</span></p>
+<p><span class="badge">${scenes.length} sampled scenes</span></p>
+<p><span class="badge">${width>height?"Landscape":width<height?"Portrait":"Square"} video</span></p>
+`;
 
-  return new Promise((resolve, reject) => {
+let timeline="";
 
-    function seek() {
+scenes.forEach((scene,index)=>{
 
-      video.currentTime = time;
+timeline+=`
+<div class="frame">
+<h3>Scene ${index+1} · ${scene.time.toFixed(1)} seconds</h3>
+<img src="${scene.image}">
+<p>Sampled frame at ${scene.time.toFixed(1)}s</p>
+</div>
+`;
 
-    }
+});
 
-    function draw() {
+document.getElementById("timeline").innerHTML=timeline;
 
-      const canvas = document.createElement("canvas");
+document.getElementById("observations").innerHTML=`
+<p>The video is ${duration.toFixed(1)} seconds long.</p>
+<p>We sampled ${scenes.length} frames across the video to examine its visual structure.</p>
+<p>Video format: ${width<height?"Vertical":width>height?"Horizontal":"Square"}.</p>
+<p>These frames provide a starting point for detecting transitions,
+visual effects, text overlays and editing patterns.</p>
+<p style="color:#b99aff">Note: These are sampled frames, not confirmed scene cuts.</p>
+`;
 
-      canvas.width = 320;
-      canvas.height = 180;
+document.getElementById("instructions").innerHTML=`
+<ol>
+<li>Open CapCut and create a new project.</li>
+<li>Import your own video clips.</li>
+<li>Arrange your clips to follow the sequence of the sampled frames.</li>
+<li>Adjust the duration of each clip to match the pacing.</li>
+<li>Explore transitions between clips.</li>
+<li>Try zoom effects, filters, text animations and overlays.</li>
+<li>Add music and synchronise cuts with the beat.</li>
+</ol>
+<p style="color:#b99aff">
+This is a general recreation guide. Specific effects have not yet been detected.
+</p>
+`;
 
-      const ctx = canvas.getContext("2d");
+document.getElementById("results").style.display="block";
+document.getElementById("loading").style.display="none";
 
-      ctx.drawImage(video, 0, 0, 320, 180);
+};
 
-      resolve(canvas.toDataURL("image/jpeg", 0.7));
-
-      video.removeEventListener("seeked", draw);
-
-    }
-
-    video.addEventListener("seeked", draw);
-
-    video.addEventListener("error", reject, {once:true});
-
-    seek();
-
-  });
-
-}
-
-function displayFrames(images) {
-
-  const container = document.getElementById("frames");
-
-  container.innerHTML = "";
-
-  images.forEach((item, index) => {
-
-    const div = document.createElement("div");
-
-    div.className = "frame";
-
-    const img = document.createElement("img");
-
-    img.src = item.image;
-
-    const p = document.createElement("p");
-
-    p.textContent =
-      "Frame " + (index + 1) +
-      " · " + formatTime(item.time);
-
-    div.appendChild(img);
-
-    div.appendChild(p);
-
-    container.appendChild(div);
-
-  });
-
-}
-
-async function detectChanges(video, timestamps) {
-
-  if (timestamps.length < 2) {
-    return 0;
-  }
-
-  const canvas = document.createElement("canvas");
-
-  canvas.width = 64;
-  canvas.height = 64;
-
-  const ctx = canvas.getContext("2d");
-
-  let previous = null;
-  let changes = 0;
-
-  for (const time of timestamps) {
-
-    await seekVideo(video, time);
-
-    ctx.drawImage(video, 0, 0, 64, 64);
-
-    const data = ctx.getImageData(
-      0, 0, 64, 64
-    ).data;
-
-    const current = [];
-
-    for (let i = 0; i < data.length; i += 16) {
-      current.push(data[i]);
-      current.push(data[i + 1]);
-      current.push(data[i + 2]);
-    }
-
-    if (previous) {
-
-      let difference = 0;
-
-      for (let i = 0; i < current.length; i++) {
-
-        difference += Math.abs(
-          current[i] - previous[i]
-        );
-
-      }
-
-      const score = difference / current.length;
-
-      if (score > 35) {
-        changes++;
-      }
-
-    }
-
-    previous = current;
-
-  }
-
-  return changes;
-
-}
-
-function seekVideo(video, time) {
-
-  return new Promise(resolve => {
-
-    video.addEventListener(
-      "seeked",
-      resolve,
-      {once:true}
-    );
-
-    video.currentTime = time;
-
-  });
+video.onerror=()=>{
+alert("Could not load this video. Please try another one.");
+document.getElementById("loading").style.display="none";
+};
 
 }
 
 </script>
-
 </body>
 </html>
