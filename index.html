@@ -4,236 +4,407 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ClipTemplate</title>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
 <style>
+:root{
+--bg:#09090f;--card:#13131d;--border:#262638;
+--purple:#8b5cf6;--light:#c4b5fd;--text:#f5f5f7;
+--muted:#9292a6;--green:#4ade80
+}
 *{box-sizing:border-box}
-body{margin:0;background:#0c0b16;color:#fff;font-family:Arial,sans-serif;padding:20px}
-.container{max-width:850px;margin:auto}
-header{text-align:center;padding:25px 0}
-h1{font-size:32px;color:#a78bfa;margin:0}
-header p{color:#aaa}
-.card{background:#171525;border:1px solid #30294a;border-radius:18px;padding:20px;margin-bottom:18px}
-input,button{width:100%;padding:14px;border-radius:10px;margin-top:12px}
-input{background:#252139;color:white;border:1px solid #453b65}
-button{background:#8b5cf6;color:white;font-weight:bold;border:none;cursor:pointer}
-button:disabled{opacity:.5}
-video{width:100%;margin-top:15px;border-radius:12px;background:#000}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.stat{background:#221d35;padding:15px;border-radius:12px}
-.stat small{color:#aaa;display:block;margin-bottom:6px}
+body{
+margin:0;background:var(--bg);color:var(--text);
+font-family:Inter,Arial,sans-serif
+}
+header{
+display:flex;justify-content:space-between;align-items:center;
+padding:18px 5%;border-bottom:1px solid var(--border)
+}
+.logo{font-size:23px;font-weight:800;letter-spacing:-1px}
+.logo span{color:var(--purple)}
+.badge{font-size:11px;color:var(--light);background:#211b37;padding:7px 10px;border-radius:20px}
+main{max-width:900px;margin:auto;padding:25px 18px 60px}
+.hero{text-align:center;padding:30px 0 25px}
+.hero h1{font-size:35px;letter-spacing:-1.5px;margin:0 0 12px}
+.hero h1 span{color:var(--light)}
+.hero p{color:var(--muted);font-size:14px;line-height:1.6}
+.card{
+background:var(--card);border:1px solid var(--border);
+border-radius:18px;padding:20px;margin-bottom:17px
+}
+.upload{
+border:1px dashed #514374;border-radius:15px;
+padding:30px 15px;text-align:center;background:#171323
+}
+.upload-icon{font-size:35px;margin-bottom:10px}
+.upload h3{margin:5px 0 10px}
+.upload p{color:var(--muted);font-size:13px}
+input[type=file]{display:none}
+.file-btn{
+display:inline-block;background:var(--purple);padding:12px 18px;
+border-radius:10px;font-size:14px;font-weight:bold;cursor:pointer
+}
+#fileName{font-size:12px;color:var(--light);margin-top:12px}
+video{width:100%;border-radius:12px;margin-top:15px;background:#000}
+button{
+border:0;cursor:pointer;color:white;font-weight:bold;
+border-radius:11px;padding:14px;background:var(--purple)
+}
+button:disabled{opacity:.45;cursor:not-allowed}
+.analyse-btn{width:100%;margin-top:15px;font-size:15px}
+.section-title{font-size:17px;font-weight:700;margin:0 0 17px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.stat{padding:16px;border:1px solid var(--border);border-radius:13px;background:#191925}
+.stat label{display:block;color:var(--muted);font-size:12px;margin-bottom:9px}
 .stat strong{font-size:20px}
-.frame{background:#221d35;border-radius:12px;padding:10px;margin-bottom:10px}
-.frame img{width:100%;border-radius:8px}
-.frame p{font-size:13px;color:#ccc}
-h2{font-size:19px}
-.result{color:#ddd;line-height:1.7}
-#status{color:#c4b5fd;text-align:center;margin-top:15px}
-footer{text-align:center;color:#777;font-size:12px;margin:30px 0}
+.stat small{color:var(--light)}
+#results{display:none}
+.progress-wrap{margin-top:18px;display:none}
+.progress-bg{background:#272438;height:6px;border-radius:20px;overflow:hidden}
+.progress-fill{height:100%;width:0;background:var(--purple);transition:width .3s}
+#status{font-size:13px;color:var(--light);margin-top:10px;text-align:center}
+.scene{
+border:1px solid var(--border);border-radius:13px;
+padding:10px;margin-bottom:12px;display:flex;gap:12px;
+align-items:flex-start
+}
+.scene img{width:110px;border-radius:9px;object-fit:cover}
+.scene-content{flex:1}
+.scene-content strong{font-size:13px}
+.scene-content p{font-size:12px;color:var(--muted);line-height:1.5}
+.tag{
+display:inline-block;padding:5px 8px;background:#241d3b;
+color:var(--light);border-radius:7px;font-size:11px;margin:4px 3px 0 0
+}
+.steps{display:flex;gap:12px;margin-bottom:15px}
+.step-num{
+min-width:30px;height:30px;border-radius:10px;
+background:#30234d;color:var(--light);
+display:flex;align-items:center;justify-content:center;font-weight:bold
+}
+.step-text{font-size:13px;line-height:1.6;color:#ddd}
+.step-text strong{display:block;margin-bottom:4px;color:white}
+.text-result{
+padding:12px;background:#191925;border-radius:10px;
+margin-bottom:10px;font-size:13px;line-height:1.6
+}
+.empty{color:var(--muted);font-size:13px;line-height:1.6}
+.disclaimer{font-size:11px;color:var(--muted);line-height:1.5}
+.search-btn{display:block;text-align:center;text-decoration:none;
+color:white;background:#30234d;padding:14px;border-radius:11px;
+font-weight:bold;margin-top:14px}
+footer{text-align:center;color:#6e6e80;font-size:12px;padding:25px}
+@media(min-width:650px){
+.grid{grid-template-columns:repeat(4,1fr)}
+.hero h1{font-size:46px}
+}
 </style>
 </head>
 <body>
-<div class="container">
+
 <header>
-<h1>ClipTemplate ✂️</h1>
-<p>Understand how your video was edited.</p>
+<div class="logo">Clip<span>Template</span> ✂</div>
+<div class="badge">VIDEO LAB</div>
 </header>
 
-<div class="card">
-<h2>Upload your video</h2>
+<main>
+<section class="hero">
+<h1>Break down any <span>video.</span></h1>
+<p>Discover its structure, on-screen text and editing style.<br>Turn inspiration into your next edit.</p>
+</section>
+
+<section class="card">
+<div class="upload">
+<div class="upload-icon">🎬</div>
+<h3>Upload your video</h3>
+<p>Choose a video from your phone to get started.</p>
+<label class="file-btn" for="file">＋ Choose Video</label>
 <input type="file" id="file" accept="video/*">
+<div id="fileName"></div>
+</div>
+
 <video id="video" controls style="display:none"></video>
-<button id="analyse" disabled>Analyse My Video</button>
-<div id="status"></div>
-</div>
 
-<div id="results" style="display:none">
-<div class="card">
-<h2>Video Overview</h2>
+<button class="analyse-btn" id="analyse" disabled>
+Analyse Video →
+</button>
+
+<div class="progress-wrap" id="progressWrap">
+<div class="progress-bg"><div class="progress-fill" id="progressFill"></div></div>
+<div id="status">Preparing...</div>
+</div>
+</section>
+
+<div id="results">
+
+<section class="card">
+<h2 class="section-title">📊 Video Overview</h2>
 <div class="grid">
-<div class="stat"><small>Duration</small><strong id="duration">--</strong></div>
-<div class="stat"><small>Resolution</small><strong id="resolution">--</strong></div>
-<div class="stat"><small>Orientation</small><strong id="orientation">--</strong></div>
-<div class="stat"><small>Scene changes</small><strong id="cuts">--</strong></div>
+<div class="stat"><label>Duration</label><strong id="duration">--</strong></div>
+<div class="stat"><label>Resolution</label><strong id="resolution">--</strong></div>
+<div class="stat"><label>Format</label><strong id="orientation">--</strong></div>
+<div class="stat"><label>Visual changes</label><strong id="changes">--</strong></div>
 </div>
-</div>
+</section>
 
-<div class="card">
-<h2>🎞️ Scene Timeline</h2>
-<div id="timeline"></div>
-</div>
+<section class="card">
+<h2 class="section-title">🎞 Scene Breakdown</h2>
+<div id="scenes"></div>
+</section>
 
-<div class="card">
-<h2>📝 On-screen Text</h2>
-<div id="ocr" class="result">Waiting for analysis...</div>
-</div>
+<section class="card">
+<h2 class="section-title">📝 Text detected</h2>
+<div id="texts"></div>
+</section>
 
-<div class="card">
-<h2>🔍 Editing Observations</h2>
-<div id="observations" class="result"></div>
-</div>
+<section class="card">
+<h2 class="section-title">✨ Editing Style</h2>
+<div id="style"></div>
+</section>
 
-<div class="card">
-<h2>🛠️ How to recreate it</h2>
-<div id="instructions" class="result"></div>
-</div>
-</div>
+<section class="card">
+<h2 class="section-title">🛠 Recreate in CapCut</h2>
+<div id="recipe"></div>
+<a id="capcutSearch" class="search-btn" target="_blank">
+🔎 Search for similar templates
+</a>
+</section>
 
-<footer>ClipTemplate • Video processing happens in your browser</footer>
+<section class="card">
+<p class="disclaimer">
+ClipTemplate estimates video structure using sampled frames.
+Scene changes, text recognition and editing suggestions may not
+identify the original effects, music or CapCut template.
+</p>
+</section>
 </div>
+</main>
 
-<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<footer>ClipTemplate · Made for creators.</footer>
+
 <script>
-const file=document.getElementById('file');
+const fileInput=document.getElementById('file');
 const video=document.getElementById('video');
-const analyse=document.getElementById('analyse');
+const analyseBtn=document.getElementById('analyse');
 const status=document.getElementById('status');
+const progressWrap=document.getElementById('progressWrap');
+const progressFill=document.getElementById('progressFill');
+
 let videoURL=null;
 
-file.addEventListener('change',()=>{
-if(!file.files[0])return;
+fileInput.addEventListener('change',()=>{
+const file=fileInput.files[0];
+if(!file)return;
+
 if(videoURL)URL.revokeObjectURL(videoURL);
-videoURL=URL.createObjectURL(file.files[0]);
+videoURL=URL.createObjectURL(file);
+
 video.src=videoURL;
 video.style.display='block';
-analyse.disabled=false;
+document.getElementById('fileName').textContent=file.name;
+analyseBtn.disabled=false;
 document.getElementById('results').style.display='none';
-status.textContent='Video ready!';
+progressWrap.style.display='none';
 });
 
-function seekTo(v,t){
+function seek(t){
 return new Promise(resolve=>{
-const handler=()=>{
-v.removeEventListener('seeked',handler);
-resolve();
-};
-v.addEventListener('seeked',handler);
-v.currentTime=t;
+const done=()=>resolve();
+video.addEventListener('seeked',done,{once:true});
+video.currentTime=t;
 });
 }
 
-function getFrame(v){
-const c=document.createElement('canvas');
-c.width=160;
-c.height=90;
-c.getContext('2d').drawImage(v,0,0,160,90);
-return c;
+function capture(){
+const canvas=document.createElement('canvas');
+canvas.width=240;
+canvas.height=135;
+canvas.getContext('2d').drawImage(video,0,0,240,135);
+return canvas;
 }
 
-function difference(a,b){
-const A=a.getContext('2d').getImageData(0,0,160,90).data;
-const B=b.getContext('2d').getImageData(0,0,160,90).data;
-let diff=0;
-for(let i=0;i<A.length;i+=16){
-diff+=Math.abs(A[i]-B[i])+Math.abs(A[i+1]-B[i+1])+Math.abs(A[i+2]-B[i+2]);
+function compare(a,b){
+const x=a.getContext('2d').getImageData(0,0,240,135).data;
+const y=b.getContext('2d').getImageData(0,0,240,135).data;
+let total=0,count=0;
+
+for(let i=0;i<x.length;i+=40){
+total+=Math.abs(x[i]-y[i]);
+total+=Math.abs(x[i+1]-y[i+1]);
+total+=Math.abs(x[i+2]-y[i+2]);
+count+=3;
 }
-return diff/(A.length/16);
+return total/count;
 }
 
-analyse.onclick=async()=>{
+function formatTime(s){
+const m=Math.floor(s/60);
+const sec=Math.floor(s%60);
+return m+':'+String(sec).padStart(2,'0');
+}
+
+function escapeHTML(s){
+return s.replace(/[&<>"']/g,c=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+}
+
+function setProgress(percent,msg){
+progressFill.style.width=percent+'%';
+status.textContent=msg;
+}
+
+analyseBtn.onclick=async()=>{
 if(!video.duration||!isFinite(video.duration))return;
 
-analyse.disabled=true;
-status.textContent='Sampling video frames...';
+analyseBtn.disabled=true;
+progressWrap.style.display='block';
 document.getElementById('results').style.display='block';
 
 const duration=video.duration;
-const count=Math.min(12,Math.max(2,Math.ceil(duration/2)));
+const n=Math.min(10,Math.max(3,Math.ceil(duration/3)));
 const frames=[];
-const timestamps=[];
+const times=[];
 
-for(let i=0;i<count;i++){
-let t=Math.min(duration-0.1,(duration*i)/count);
-await seekTo(video,t);
-frames.push(getFrame(video));
-timestamps.push(t);
+try{
+for(let i=0;i<n;i++){
+setProgress((i/n)*25,'Sampling frame '+(i+1)+' of '+n);
+const t=Math.min(duration-.05,duration*i/n);
+await seek(t);
+frames.push(capture());
+times.push(t);
 }
 
-document.getElementById('duration').textContent=Math.round(duration)+' sec';
-document.getElementById('resolution').textContent=video.videoWidth+' × '+video.videoHeight;
-document.getElementById('orientation').textContent=video.videoWidth>video.videoHeight?'Landscape':'Portrait';
+document.getElementById('duration').textContent=formatTime(duration);
+document.getElementById('resolution').textContent=video.videoWidth+'×'+video.videoHeight;
+document.getElementById('orientation').textContent=
+video.videoWidth>video.videoHeight?'Landscape':'Portrait';
 
-status.textContent='Comparing scenes...';
-
-let changes=0;
-const scores=[];
+let cutCount=0;
+const differences=[];
 
 for(let i=1;i<frames.length;i++){
-let score=difference(frames[i-1],frames[i]);
-scores.push(score);
-if(score>30)changes++;
+const d=compare(frames[i-1],frames[i]);
+differences.push(d);
+if(d>25)cutCount++;
 }
 
-document.getElementById('cuts').textContent=changes;
+document.getElementById('changes').textContent=cutCount;
 
-const timeline=document.getElementById('timeline');
-timeline.innerHTML='';
+const scenes=document.getElementById('scenes');
+scenes.innerHTML='';
 
-frames.forEach((f,i)=>{
+frames.forEach((frame,i)=>{
 const div=document.createElement('div');
-div.className='frame';
+div.className='scene';
+
 const img=document.createElement('img');
-img.src=f.toDataURL();
+img.src=frame.toDataURL();
+
+const content=document.createElement('div');
+content.className='scene-content';
+
+const heading=document.createElement('strong');
+heading.textContent='Frame '+(i+1);
+
 const p=document.createElement('p');
-p.textContent='Sample '+(i+1)+' • '+timestamps[i].toFixed(1)+' seconds';
+p.textContent='Sampled at '+formatTime(times[i]);
+
+content.appendChild(heading);
+content.appendChild(p);
+
 div.appendChild(img);
-div.appendChild(p);
-timeline.appendChild(div);
+div.appendChild(content);
+scenes.appendChild(div);
 });
 
-status.textContent='Checking frames for on-screen text...';
+setProgress(30,'Preparing text recognition...');
 
-let textFound=[];
+let recognized=[];
 let worker=null;
 
 try{
 if(typeof Tesseract!=='undefined'){
 worker=await Tesseract.createWorker('eng');
+
 for(let i=0;i<frames.length;i++){
-status.textContent='Reading text in frame '+(i+1)+'/'+frames.length;
-const res=await worker.recognize(frames[i]);
-const txt=res.data.text.trim();
-if(txt)textFound.push({time:timestamps[i],text:txt});
+setProgress(30+(i/frames.length)*55,
+'Reading frame '+(i+1)+' of '+frames.length);
+
+const result=await worker.recognize(frames[i]);
+const text=result.data.text.trim();
+
+if(text){
+recognized.push({time:times[i],text:text});
+}
 }
 await worker.terminate();
 }
 }catch(e){
-if(worker)try{await worker.terminate()}catch(err){}
-textFound=[];
+if(worker){
+try{await worker.terminate()}catch(err){}
+}
 }
 
-const ocr=document.getElementById('ocr');
-if(textFound.length){
-ocr.innerHTML=textFound.map(x=>
-'<p><strong>'+x.time.toFixed(1)+'s:</strong> '+escapeHTML(x.text)+'</p>'
-).join('');
+const texts=document.getElementById('texts');
+texts.innerHTML='';
+
+if(recognized.length){
+recognized.forEach(item=>{
+const div=document.createElement('div');
+div.className='text-result';
+div.innerHTML='<strong>'+formatTime(item.time)+'</strong><br>'+
+escapeHTML(item.text);
+texts.appendChild(div);
+});
 }else{
-ocr.textContent='No readable text detected in the sampled frames. Text detection may be limited by video quality.';
+texts.innerHTML='<p class="empty">No readable text was detected in the sampled frames.</p>';
 }
 
-document.getElementById('observations').innerHTML=
-'• Video duration: '+duration.toFixed(1)+' seconds.<br>'+
-'• '+frames.length+' frames sampled.<br>'+
-'• Approximately '+changes+' noticeable visual changes detected between sampled frames.<br>'+
-'• '+textFound.length+' sampled frames contained readable text.<br>'+
-'• '+(video.videoWidth>video.videoHeight?'Landscape':'Portrait')+' format detected.<br>'+
-'• Scene change estimates are approximate; gradual effects may not be detected.';
+const portrait=video.videoHeight>video.videoWidth;
+const changeLevel=cutCount;
 
-document.getElementById('instructions').innerHTML=
-'1. Open CapCut and import your video.<br>'+
-'2. Trim clips to match the timing you want.<br>'+
-'3. Add text using the text content detected above, where applicable.<br>'+
-'4. Explore transitions such as Flash, Blur or Camera Shake if your video style calls for them.<br>'+
-'5. Adjust speed, filters and music to match the original video.<br>'+
-'6. Export in the same orientation as your source video.';
+let styleText='';
 
-status.textContent='Analysis complete! 🔥';
-analyse.disabled=false;
+if(changeLevel>=5){
+styleText='The sampled frames show frequent visual differences. This may be a fast-paced edit, multiple shots or changing visual content.';
+}else if(changeLevel>=2){
+styleText='The sampled frames show several visual differences. This may indicate a multi-scene edit or changing content.';
+}else{
+styleText='The sampled frames show relatively few large visual differences. This may be a continuous shot, a static scene or a subtle edit.';
+}
+
+document.getElementById('style').innerHTML=
+'<p class="empty">'+styleText+'</p>'+
+'<div class="tag">'+(portrait?'Portrait video':'Landscape video')+'</div>'+
+'<div class="tag">'+frames.length+' sampled frames</div>'+
+'<div class="tag">'+cutCount+' estimated changes</div>'+
+'<div class="tag">'+duration.toFixed(1)+' seconds</div>';
+
+const recipe=[
+['Import','Open CapCut and import the original video.'],
+['Structure','Use the sampled frames as a rough guide to the video structure.'],
+['Timing','Trim clips and align the important moments with your soundtrack.'],
+['Text','Use the detected text above to recreate any visible captions.'],
+['Effects','Experiment with zoom, motion blur, transitions or filters only where they fit the footage.'],
+['Export','Export using the same orientation and a suitable resolution.']
+];
+
+document.getElementById('recipe').innerHTML=recipe.map((r,i)=>
+'<div class="steps"><div class="step-num">'+(i+1)+'</div>'+
+'<div class="step-text"><strong>'+r[0]+'</strong>'+r[1]+'</div></div>'
+).join('');
+
+document.getElementById('capcutSearch').href=
+'https://www.google.com/search?q=CapCut+video+templates';
+
+setProgress(100,'Analysis complete ✓');
+}catch(e){
+status.textContent='Something went wrong. Try a shorter video.';
+console.error(e);
+}
+analyseBtn.disabled=false;
 };
-
-function escapeHTML(str){
-return str.replace(/[&<>"']/g,m=>({
-'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-}[m]));
-}
 </script>
 </body>
 </html>
