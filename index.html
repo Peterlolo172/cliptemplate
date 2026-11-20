@@ -1,1 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipTemplate</title>
 
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #080b12;
+  color: white;
+  font-family: Arial, sans-serif;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.logo span {
+  color: #a78bfa;
+}
+
+.badge {
+  font-size: 12px;
+  border: 1px solid #292d3b;
+  padding: 8px 12px;
+  border-radius: 20px;
+  color: #a78bfa;
+}
+
+.hero {
+  padding: 50px 22px 30px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 38px;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.hero h1 span {
+  color: #a78bfa;
+}
+
+.hero p {
+  color: #a1a1aa;
+  line-height: 1.7;
+  margin-bottom: 30px;
+}
+
+.card {
+  margin: 20px;
+  padding: 22px;
+  background: #111522;
+  border: 1px solid #292d3b;
+  border-radius: 18px;
+}
+
+input {
+  width: 100%;
+  padding: 17px;
+  margin: 12px 0;
+  background: #080b12;
+  border: 1px solid #34384a;
+  border-radius: 12px;
+  color: white;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 17px;
+  border: none;
+  border-radius: 12px;
+  background: #8b5cf6;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.upload {
+  border: 1px dashed #555b70;
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  color: #a1a1aa;
+  margin-top: 15px;
+}
+
+.upload input {
+  border: none;
+}
+
+.section-title {
+  margin-bottom: 15px;
+  font-size: 20px;
+}
+
+.features {
+  padding: 20px;
+}
+
+.feature {
+  background: #111522;
+  border: 1px solid #292d3b;
+  border-radius: 15px;
+  padding: 20px;
+  margin: 12px 0;
+}
+
+.feature h3 {
+  margin-bottom: 10px;
+}
+
+.feature p {
+  color: #a1a1aa;
+  line-height: 1.6;
+}
+
+footer {
+  padding: 30px;
+  text-align: center;
+  color: #777c90;
+  font-size: 13px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Clip<span>Template</span></div>
+  <div class="badge">VIDEO EDIT AI</div>
+</header>
+
+<section class="hero">
+  <h1>Discover the edit<br>behind <span>the video.</span></h1>
+
+  <p>
+    Find the CapCut template behind viral videos.
+    Upload or paste a link and uncover how it was made.
+  </p>
+</section>
+
+<section class="card">
+
+  <h2 class="section-title">Find your template</h2>
+
+  <input
+    type="url"
+    id="videoLink"
+    placeholder="Paste TikTok video link here..."
+  >
+
+  <button onclick="analyse()">Analyse Video</button>
+
+  <div class="upload">
+    <p>Or upload a video from your phone</p>
+
+    <input
+      type="file"
+      id="videoFile"
+      accept="video/*"
+    >
+  </div>
+
+  <div id="result" style="margin-top:20px;"></div>
+
+</section>
+
+<section class="features">
+
+  <h2 class="section-title">What ClipTemplate does</h2>
+
+  <div class="feature">
+    <h3>🔎 Template Discovery</h3>
+    <p>Find matching CapCut templates from videos you love.</p>
+  </div>
+
+  <div class="feature">
+    <h3>✂️ Editing Breakdown</h3>
+    <p>Discover cuts, transitions, effects and video timing.</p>
+  </div>
+
+  <div class="feature">
+    <h3>🎵 Music Detection</h3>
+    <p>Identify the sound and rhythm used in the video.</p>
+  </div>
+
+  <div class="feature">
+    <h3>📱 Easy Recreation</h3>
+    <p>Learn how to recreate the editing style using CapCut.</p>
+  </div>
+
+</section>
+
+<footer>
+  ClipTemplate · Discover the edit behind the video.
+</footer>
+
+<script>
+function analyse() {
+  const link = document.getElementById("videoLink").value;
+  const file = document.getElementById("videoFile").files[0];
+  const result = document.getElementById("result");
+
+  if (!link && !file) {
+    result.innerHTML =
+      "<p style='color:#f87171'>Please paste a video link or upload a video first.</p>";
+    return;
+  }
+
+  result.innerHTML =
+    "<p style='color:#a78bfa'>Your video has been submitted. Our analysis system will be added soon!</p>";
+}
+</script>
+
+</body>
+  </html>
